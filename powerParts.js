@@ -27,12 +27,12 @@ let selectedPowerParts = [];
 
 // Function to add a new power part section
 function addPowerPart() {
-    console.log("Button clicked");
     const partIndex = selectedPowerParts.length;
     selectedPowerParts.push({ part: powerParts[0], opt1Level: 0 });
 
     // Create new section for the power part
     const powerPartSection = document.createElement("div");
+    powerPartSection.id = `powerPart-${partIndex}`;
     powerPartSection.innerHTML = `
         <select onchange="updateSelectedPart(${partIndex}, this.value)">
             ${powerParts.map((part, index) => `<option value="${index}">${part.name}</option>`).join('')}
@@ -45,6 +45,7 @@ function addPowerPart() {
             <button onclick="changeOptionLevel(${partIndex}, 1)">Increase Opt1</button>
             <button onclick="changeOptionLevel(${partIndex}, -1)">Decrease Opt1</button>
         </div>
+        <button onclick="removePowerPart(${partIndex})">-</button>
     `;
 
     // Add new part section to the container
@@ -83,6 +84,19 @@ function changeOptionLevel(index, change) {
     document.getElementById(`totalEnergy-${index}`).textContent = energy;
 
     // Recalculate total costs
+    updateTotalCosts();
+}
+
+// Function to remove a power part section
+function removePowerPart(index) {
+    // Remove the power part section from the DOM
+    const powerPartSection = document.getElementById(`powerPart-${index}`);
+    powerPartSection.remove();
+
+    // Remove the power part from the selectedPowerParts array
+    selectedPowerParts.splice(index, 1);
+
+    // Update total costs
     updateTotalCosts();
 }
 
