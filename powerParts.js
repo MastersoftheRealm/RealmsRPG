@@ -1,73 +1,147 @@
-// Assuming these variables are defined globally somewhere in your code
-let selectedPowerParts = [];
-
-// Your power parts array example with a few parts
+// Array of power parts with descriptions and additional options
 let powerParts = [
     {
         name: "Ability Increase",
-        baseBP: 1,
-        BPIncreaseOpt1: 1,
-        BPIncreaseOpt2: 0,
-        BPIncreaseOpt3: 0,
-        altBP: 0,
-        baseEnergy: 10,
-        energyIncreaseOpt1: 10,
-        energyIncreaseOpt2: 4,
-        energyIncreaseOpt3: 0,
-        altBaseEnergy: 15,
-        currentOpt1Level: 0,
-        currentOpt2Level: 0,
-        currentOpt3Level: 0,
-        useAltCost: false,
         description: "Increase the target’s Ability by +1 for the duration.",
+        baseBP: 1,
+        baseEnergy: 10,
+
+        // Option 1: Increase by additional +1
+        opt1Cost: 10,
         opt1Description: "Add additional +1 to the ability, to a maximum of +8. No ability can be increased above 10 using this part.",
-        opt2Description: "Increase the maximum increase cap by +1."
-    }
-    // Add more power parts here
+        BPIncreaseOpt1: 0,
+
+        // Option 2: Increase max cap by +1
+        opt2Cost: 4,
+        opt2Description: "Increase the maximum increase cap by +1.",
+        BPIncreaseOpt2: 0,
+
+        // Option 3: Placeholder
+        opt3Cost: 5,
+        opt3Description: "Placeholder for a third option description.",
+        BPIncreaseOpt3: 0,
+
+        // Alternate energy cost
+        altBaseEnergy: 8,
+        altEnergyDescription: "Use a lower base energy cost at 8 EN, sacrificing some effectiveness.",
+        useAltCost: false
+    },
+    // Add more power parts as needed...
 ];
 
-// Function to add a power part
+// Array to hold the selected power parts
+let selectedPowerParts = [];
+
+// Function to add a new power part section
 function addPowerPart() {
     const partIndex = selectedPowerParts.length;
     selectedPowerParts.push({ part: powerParts[0], opt1Level: 0, opt2Level: 0, opt3Level: 0, useAltCost: false });
 
-    const newPartDiv = document.createElement("div");
-    newPartDiv.id = "powerPart_" + partIndex;
-    newPartDiv.innerHTML = `
-        <h4>${powerParts[0].name}</h4>
+    const powerPartSection = document.createElement("div");
+    powerPartSection.id = `powerPart-${partIndex}`;
+    powerPartSection.style.marginBottom = "20px";
+    powerPartSection.innerHTML = `
+        <h3>${powerParts[0].name}</h3>
         <p>${powerParts[0].description}</p>
-        <p>Base Energy: ${powerParts[0].baseEnergy}</p>
-        <p>Base BP: ${powerParts[0].baseBP}</p>
-        <p>Option 1 Energy: ${powerParts[0].energyIncreaseOpt1} <button onclick="changeOptionLevel(${partIndex}, 'opt1Level', 'increase')">Increase</button><button onclick="changeOptionLevel(${partIndex}, 'opt1Level', 'decrease')">Decrease</button></p>
-        <p>${powerParts[0].opt1Description}</p>
-        <p>Option 2 Energy: ${powerParts[0].energyIncreaseOpt2} <button onclick="changeOptionLevel(${partIndex}, 'opt2Level', 'increase')">Increase</button><button onclick="changeOptionLevel(${partIndex}, 'opt2Level', 'decrease')">Decrease</button></p>
-        <p>${powerParts[0].opt2Description}</p>
-        <p><button onclick="toggleAltCost(${partIndex})">Toggle Alternative Energy Cost</button></p>
+        <select onchange="updateSelectedPart(${partIndex}, this.value)">
+            ${powerParts.map((part, index) => `<option value="${index}">${part.name}</option>`).join('')}
+        </select>
+
+        <div>
+            <p>Base BP: <span id="baseBP-${partIndex}">${powerParts[0].baseBP}</span></p>
+            <p>Base Energy: <span id="baseEnergy-${partIndex}">${powerParts[0].baseEnergy}</span></p>
+            
+            <!-- Option 1 -->
+            <h4>Option 1: ${powerParts[0].opt1Cost} EN</h4>
+            <p>${powerParts[0].opt1Description}</p>
+            <button onclick="changeOptionLevel(${partIndex}, 'opt1', 1)">Increase Opt1</button>
+            <button onclick="changeOptionLevel(${partIndex}, 'opt1', -1)">Decrease Opt1</button>
+            <span>Level: <span id="opt1Level-${partIndex}">0</span></span>
+            
+            <!-- Option 2 -->
+            <h4>Option 2: ${powerParts[0].opt2Cost} EN</h4>
+            <p>${powerParts[0].opt2Description}</p>
+            <button onclick="changeOptionLevel(${partIndex}, 'opt2', 1)">Increase Opt2</button>
+            <button onclick="changeOptionLevel(${partIndex}, 'opt2', -1)">Decrease Opt2</button>
+            <span>Level: <span id="opt2Level-${partIndex}">0</span></span>
+
+            <!-- Option 3 -->
+            <h4>Option 3: ${powerParts[0].opt3Cost} EN</h4>
+            <p>${powerParts[0].opt3Description}</p>
+            <button onclick="changeOptionLevel(${partIndex}, 'opt3', 1)">Increase Opt3</button>
+            <button onclick="changeOptionLevel(${partIndex}, 'opt3', -1)">Decrease Opt3</button>
+            <span>Level: <span id="opt3Level-${partIndex}">0</span></span>
+
+            <!-- Toggle Alternative Energy Cost -->
+            <button onclick="toggleAltEnergy(${partIndex})">Toggle Alternative Energy Cost</button>
+            <p id="altEnergyDescription-${partIndex}" style="display: none;">${powerParts[0].altEnergyDescription}</p>
+        </div>
+        <button onclick="removePowerPart(${partIndex})" style="margin-top: 10px;">-</button>
     `;
-    
-    document.getElementById("powerPartsContainer").appendChild(newPartDiv);
+    document.getElementById("powerPartsContainer").appendChild(powerPartSection);
+
     updateTotalCosts();
 }
 
-// Function to change option level (increase or decrease)
-function changeOptionLevel(partIndex, option, direction) {
-    const partData = selectedPowerParts[partIndex];
+// Function to update selected power part in dropdown
+function updateSelectedPart(index, selectedValue) {
+    const selectedPart = powerParts[selectedValue];
+    selectedPowerParts[index].part = selectedPart;
+    selectedPowerParts[index].opt1Level = 0;
+    selectedPowerParts[index].opt2Level = 0;
+    selectedPowerParts[index].opt3Level = 0;
+    selectedPowerParts[index].useAltCost = false;
 
-    // Increase or decrease the option level based on direction
-    if (direction === 'increase') {
-        partData[option]++;
-    } else if (direction === 'decrease' && partData[option] > 0) {
-        partData[option]--;
+    document.getElementById(`baseBP-${index}`).textContent = selectedPart.baseBP;
+    document.getElementById(`baseEnergy-${index}`).textContent = selectedPart.baseEnergy;
+    document.getElementById(`altEnergyDescription-${index}`).style.display = "none";
+
+    updateTotalCosts();
+}
+
+// Function to change the level of an increase option
+function changeOptionLevel(index, option, delta) {
+    const part = selectedPowerParts[index];
+    const levelKey = `${option}Level`;
+    const energyIncreaseKey = `${option}Cost`;
+
+    part[levelKey] = Math.max(0, part[levelKey] + delta);
+
+    const levelDisplay = document.getElementById(`${levelKey}-${index}`);
+    if (levelDisplay) {
+        levelDisplay.textContent = part[levelKey];
     }
 
-    updateTotalCosts();  // Ensure total costs are updated after changing option levels
+    updateTotalCosts();
 }
 
 // Function to toggle alternative energy cost
-function toggleAltCost(partIndex) {
-    const partData = selectedPowerParts[partIndex];
-    partData.useAltCost = !partData.useAltCost;  // Toggle the useAltCost flag
-    updateTotalCosts();  // Update the total costs when toggling alternative cost
+function toggleAltEnergy(index) {
+    const part = selectedPowerParts[index];
+    part.useAltCost = !part.useAltCost;
+
+    const energyDisplay = document.getElementById(`baseEnergy-${index}`);
+    const altDescription = document.getElementById(`altEnergyDescription-${index}`);
+    
+    if (part.useAltCost) {
+        energyDisplay.textContent = part.part.altBaseEnergy;
+        altDescription.style.display = "block";
+    } else {
+        energyDisplay.textContent = part.part.baseEnergy;
+        altDescription.style.display = "none";
+    }
+
+    updateTotalCosts();
+}
+
+// Function to remove a power part section
+function removePowerPart(index) {
+    selectedPowerParts.splice(index, 1);
+
+    const partElement = document.getElementById(`powerPart-${index}`);
+    if (partElement) partElement.remove();
+
+    updateTotalCosts();
 }
 
 // Function to update total energy and BP costs
@@ -80,9 +154,9 @@ function updateTotalCosts() {
         let partEnergy = partData.useAltCost ? part.altBaseEnergy : part.baseEnergy;
         let partBP = part.baseBP;
 
-        partEnergy += part.energyIncreaseOpt1 * partData.opt1Level;
-        partEnergy += part.energyIncreaseOpt2 * partData.opt2Level;
-        partEnergy += part.energyIncreaseOpt3 * partData.opt3Level;
+        partEnergy += part.opt1Cost * partData.opt1Level;
+        partEnergy += part.opt2Cost * partData.opt2Level;
+        partEnergy += part.opt3Cost * partData.opt3Level;
 
         partBP += part.BPIncreaseOpt1 * partData.opt1Level;
         partBP += part.BPIncreaseOpt2 * partData.opt2Level;
@@ -92,23 +166,6 @@ function updateTotalCosts() {
         totalBP += partBP;
     });
 
-    // Log elements to ensure they exist before setting textContent
-    const totalEnergyElement = document.getElementById("totalEnergy");
-    const totalBPElement = document.getElementById("totalBP");
-
-    console.log("totalEnergyElement:", totalEnergyElement);  // Add this log
-    console.log("totalBPElement:", totalBPElement);  // Add this log
-
-    // Update total energy and BP text content if the elements exist
-    if (totalEnergyElement) {
-        totalEnergyElement.textContent = totalEnergy;
-    } else {
-        console.warn("Element with id 'totalEnergy' not found");
-    }
-
-    if (totalBPElement) {
-        totalBPElement.textContent = totalBP;
-    } else {
-        console.warn("Element with id 'totalBP' not found");
-    }
+    document.getElementById("totalEnergy").textContent = totalEnergy;
+    document.getElementById("totalBP").textContent = totalBP;
 }
