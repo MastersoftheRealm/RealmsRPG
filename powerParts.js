@@ -36,20 +36,21 @@ function addPowerPart() {
     powerPartSection.style.marginBottom = "20px"; // Adds space between each section
 
     powerPartSection.innerHTML = `
-        <select onchange="updateSelectedPart(${partIndex}, this.value)">
-            ${powerParts.map((part, index) => `<option value="${index}">${part.name}</option>`).join('')}
-        </select>
-        <div>
-            <p>Base BP: <span id="baseBP-${partIndex}">${powerParts[0].baseBP}</span></p>
-            <p>Base Energy: <span id="baseEnergy-${partIndex}">${powerParts[0].baseEnergy}</span></p>
-            <p>Total BP: <span id="totalBP-${partIndex}">${powerParts[0].calculateBP()}</span></p>
-            <p>Total Energy: <span id="totalEnergy-${partIndex}">${powerParts[0].calculateEnergy()}</span></p>
-            <button onclick="changeOptionLevel(${partIndex}, 1)">Increase Opt1</button>
-            <button onclick="changeOptionLevel(${partIndex}, -1)">Decrease Opt1</button>
-        </div>
-        <!-- This is the "-" button for removing the section -->
-        <button onclick="removePowerPart(${partIndex})" style="margin-top: 10px;">-</button>
-    `;
+    <select onchange="updateSelectedPart(${partIndex}, this.value)">
+        ${powerParts.map((part, index) => `<option value="${index}">${part.name}</option>`).join('')}
+    </select>
+    <div>
+        <p>Base BP: <span id="baseBP-${partIndex}">${powerParts[0].baseBP}</span></p>
+        <p>Base Energy: <span id="baseEnergy-${partIndex}">${powerParts[0].baseEnergy}</span></p>
+        <p>Total BP: <span id="totalBP-${partIndex}">${powerParts[0].calculateBP()}</span></p>
+        <p>Total Energy: <span id="totalEnergy-${partIndex}">${powerParts[0].calculateEnergy()}</span></p>
+        <button onclick="changeOptionLevel(${partIndex}, 1)">Increase Opt1</button>
+        <button onclick="changeOptionLevel(${partIndex}, -1)">Decrease Opt1</button>
+    </div>
+    <!-- Ensure that the "-" button is correctly passing partIndex to removePowerPart -->
+    <button onclick="removePowerPart(${partIndex})" style="margin-top: 10px;">-</button>
+`;
+
 
     // Add new part section to the container
     document.getElementById("powerPartsContainer").appendChild(powerPartSection);
