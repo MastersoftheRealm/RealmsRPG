@@ -1,0 +1,24 @@
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+#addPowerPartButton {
+    margin-top: 20px;
+}
+
+#powerPartsContainer {
+    margin-top: 20px;
+}
+
+#totalCosts {
+    margin-top: 20px;
+}
+
+.power-part-section {
+    margin-bottom: 20px;
+}
