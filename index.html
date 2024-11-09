@@ -8,8 +8,47 @@
 </head>
 <body>
 
+    <!-- Page title -->
+    <h1 class="page-title">Power Builder</h1>
+
+    <!-- General power options container -->
+    <div id="generalPowerOptionsContainer">
+        <h3 class="centered-title">General Power Options</h3>
+        <div class="option-container">
+            <div class="option-box">
+                <h4>Range: <span id="rangeValue">1</span> space
+                    <div class="button-container">
+                        <button class="small-button" onclick="changeRange(1)">+</button>
+                        <button class="small-button" onclick="changeRange(-1)">-</button>
+                    </div>
+                </h4>
+            </div>
+            <div class="option-box">
+                <h4>Area of Effect: <span id="areaValue">1</span> space
+                    <div class="button-container">
+                        <button class="small-button" onclick="changeArea(1)">+</button>
+                        <button class="small-button" onclick="changeArea(-1)">-</button>
+                    </div>
+                </h4>
+            </div>
+            <div class="option-box">
+                <h4>Duration: <span id="durationValue">1</span> round
+                    <div class="button-container">
+                        <button class="small-button" onclick="changeDuration(1)">+</button>
+                        <button class="small-button" onclick="changeDuration(-1)">-</button>
+                    </div>
+                </h4>
+                <div class="checkbox-container">
+                    <label><input type="checkbox" id="focusCheckbox" onclick="updateTotalCosts()" disabled> Focus</label><br>
+                    <label><input type="checkbox" id="noHarmCheckbox" onclick="updateTotalCosts()" disabled> No direct harm or adaptation parts</label><br>
+                    <label><input type="checkbox" id="endsOnceCheckbox" onclick="updateTotalCosts()" disabled> Power ends when used once/activated</label>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Button to add a new power part section -->
-    <button id="addPowerPartButton">+</button>
+    <button id="addPowerPartButton">Add Part</button>
 
     <!-- Container for all power part sections -->
     <div id="powerPartsContainer"></div>
