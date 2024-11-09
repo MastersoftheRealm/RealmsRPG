@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&family=Uncial+Antiqua&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&family=Merriweather:wght@700&display=swap');
 
 body {
     display: flex;
@@ -10,8 +10,14 @@ body {
     background-color: #f4f4f4;
 }
 
-#addPowerPartButton {
+.page-title {
+    font-family: 'Merriweather', serif;
+    font-size: 36px;
+    font-weight: bold;
     margin-top: 20px;
+}
+
+#addPowerPartButton {
     padding: 10px 20px;
     font-size: 16px;
     border-radius: 5px;
@@ -19,6 +25,9 @@ body {
     background-color: #007bff;
     color: white;
     cursor: pointer;
+    align-self: flex-start;
+    margin-left: 10%;
+    margin-top: 20px; /* Add spacing between the button and the general power options */
 }
 
 #addPowerPartButton:hover {
@@ -28,6 +37,20 @@ body {
 #powerPartsContainer {
     margin-top: 20px;
     width: 80%;
+    position: relative;
+}
+
+#generalPowerOptionsContainer {
+    margin-top: 20px;
+    width: 80%;
+    padding: 10px; /* Reduce padding to make the boxes smaller */
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.centered-title {
+    text-align: center;
 }
 
 #totalCosts {
@@ -48,7 +71,7 @@ body {
 }
 
 .power-part-section h3 {
-    font-family: 'Uncial Antiqua', cursive;
+    font-family: 'American Typewriter', serif;
     font-size: 24px;
     margin: 0;
 }
@@ -63,6 +86,8 @@ body {
     font-family: 'Nunito', sans-serif;
     font-size: 16px;
     margin: 10px 0 5px;
+    display: flex; /* Ensure the buttons are on the same line */
+    align-items: center; /* Vertically align the buttons */
 }
 
 .power-part-section button {
@@ -105,10 +130,33 @@ body {
 .option-box {
     flex: 1;
     margin: 0 5px;
-    padding: 10px;
+    padding: 5px; /* Reduce padding to make the boxes smaller */
     background-color: #f9f9f9;
     border-radius: 10px;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.button-container {
+    display: inline-block; /* Ensure the buttons are on the same line */
+    margin-left: 10px;
+}
+
+.small-button {
+    padding: 2px 5px;
+    font-size: 12px;
+    border-radius: 3px;
+    border: none;
+    background-color: #87ceeb; /* Slightly darker blue color */
+    color: white;
+    cursor: pointer;
+}
+
+.small-button:hover {
+    background-color: #4682b4; /* Darker blue on hover */
+}
+
+.checkbox-container {
+    margin-top: 10px;
 }
 
 .power-part-section select {
