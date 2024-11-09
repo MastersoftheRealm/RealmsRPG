@@ -16,6 +16,7 @@
             BPIncreaseOpt3: 0,
             altBaseEnergy: 8,
             altEnergyDescription: "Use a lower base energy cost at 8 EN, sacrificing some effectiveness.",
+            altBP: 0,
             useAltCost: false
         },
         // Add more power parts as needed...
@@ -31,42 +32,50 @@
         powerPartSection.id = `powerPart-${partIndex}`;
         powerPartSection.classList.add("power-part-section");
         powerPartSection.innerHTML = `
-            <h3>${powerParts[0].name}</h3>
-            <p>${powerParts[0].description}</p>
             <select onchange="updateSelectedPart(${partIndex}, this.value)">
                 ${powerParts.map((part, index) => `<option value="${index}">${part.name}</option>`).join('')}
             </select>
-
-            <div>
-                <p>Base BP: <span id="baseBP-${partIndex}">${powerParts[0].baseBP}</span></p>
-                <p>Base Energy: <span id="baseEnergy-${partIndex}">${powerParts[0].baseEnergy}</span></p>
-                
+            <h3>${powerParts[0].name} <span class="small-text">Energy: <span id="baseEnergy-${partIndex}">${powerParts[0].baseEnergy}</span></span> <span class="small-text">Building Points: <span id="baseBP-${partIndex}">${powerParts[0].baseBP}</span></span></h3>
+            <p>Part EN: <span id="totalEnergy-${partIndex}">${powerParts[0].baseEnergy}</span> Part BP: <span id="totalBP-${partIndex}">${powerParts[0].baseBP}</span></p>
+            <p>${powerParts[0].description}</p>
+            
+            <div class="option-container">
                 <!-- Option 1 -->
-                <h4>Option 1: ${powerParts[0].opt1Cost} EN</h4>
-                <p>${powerParts[0].opt1Description}</p>
-                <button onclick="changeOptionLevel(${partIndex}, 'opt1', 1)">Increase Opt1</button>
-                <button onclick="changeOptionLevel(${partIndex}, 'opt1', -1)">Decrease Opt1</button>
-                <span>Level: <span id="opt1Level-${partIndex}">0</span></span>
+                <div class="option-box">
+                    <h4>Energy: +${powerParts[0].opt1Cost}</h4>
+                    <button onclick="changeOptionLevel(${partIndex}, 'opt1', 1)">+</button>
+                    <button onclick="changeOptionLevel(${partIndex}, 'opt1', -1)">-</button>
+                    <span>Level: <span id="opt1Level-${partIndex}">0</span></span>
+                    <p>${powerParts[0].opt1Description}</p>
+                </div>
                 
                 <!-- Option 2 -->
-                <h4>Option 2: ${powerParts[0].opt2Cost} EN</h4>
-                <p>${powerParts[0].opt2Description}</p>
-                <button onclick="changeOptionLevel(${partIndex}, 'opt2', 1)">Increase Opt2</button>
-                <button onclick="changeOptionLevel(${partIndex}, 'opt2', -1)">Decrease Opt2</button>
-                <span>Level: <span id="opt2Level-${partIndex}">0</span></span>
+                <div class="option-box">
+                    <h4>Energy: +${powerParts[0].opt2Cost}</h4>
+                    <button onclick="changeOptionLevel(${partIndex}, 'opt2', 1)">+</button>
+                    <button onclick="changeOptionLevel(${partIndex}, 'opt2', -1)">-</button>
+                    <span>Level: <span id="opt2Level-${partIndex}">0</span></span>
+                    <p>${powerParts[0].opt2Description}</p>
+                </div>
 
                 <!-- Option 3 -->
-                <h4>Option 3: ${powerParts[0].opt3Cost} EN</h4>
-                <p>${powerParts[0].opt3Description}</p>
-                <button onclick="changeOptionLevel(${partIndex}, 'opt3', 1)">Increase Opt3</button>
-                <button onclick="changeOptionLevel(${partIndex}, 'opt3', -1)">Decrease Opt3</button>
-                <span>Level: <span id="opt3Level-${partIndex}">0</span></span>
+                <div class="option-box">
+                    <h4>Energy: +${powerParts[0].opt3Cost}</h4>
+                    <button onclick="changeOptionLevel(${partIndex}, 'opt3', 1)">+</button>
+                    <button onclick="changeOptionLevel(${partIndex}, 'opt3', -1)">-</button>
+                    <span>Level: <span id="opt3Level-${partIndex}">0</span></span>
+                    <p>${powerParts[0].opt3Description}</p>
+                </div>
 
-                <!-- Toggle Alternative Energy Cost -->
-                <button onclick="toggleAltEnergy(${partIndex})">Toggle Alternative Energy Cost</button>
-                <p id="altEnergyDescription-${partIndex}" style="display: none;">${powerParts[0].altEnergyDescription}</p>
+                <!-- Alternative Energy Cost -->
+                <div class="option-box">
+                    <h4>Alternate Base Energy: ${powerParts[0].altBaseEnergy}</h4>
+                    <button onclick="toggleAltEnergy(${partIndex})">Toggle</button>
+                    <p>${powerParts[0].altEnergyDescription}</p>
+                </div>
             </div>
-            <button onclick="removePowerPart(${partIndex})" style="margin-top: 10px;">-</button>
+
+            <button class="delete-button" onclick="removePowerPart(${partIndex})">Delete</button>
         `;
         document.getElementById("powerPartsContainer").appendChild(powerPartSection);
 
@@ -99,6 +108,12 @@
         if (levelDisplay) {
             levelDisplay.textContent = part[levelKey];
         }
+
+        const optionElement = document.querySelector(`#powerPart-${index} .option-box:nth-of-type(${option === 'opt1' ? 1 : option === 'opt2' ? 2 : option === 'opt3' ? 3 : 4}) h4`);
+        optionElement.innerHTML = `Energy: +${part.part[energyIncreaseKey]}`;
+
+        const descriptionElement = document.querySelector(`#powerPart-${index} .option-box:nth-of-type(${option === 'opt1' ? 1 : option === 'opt2' ? 2 : option === 'opt3' ? 3 : 4}) p`);
+        descriptionElement.innerHTML = part.part[`${option}Description`];
 
         updateTotalCosts();
     }
@@ -149,6 +164,9 @@
 
             totalEnergy += partEnergy;
             totalBP += partBP;
+
+            document.getElementById(`totalEnergy-${partIndex}`).textContent = partEnergy;
+            document.getElementById(`totalBP-${partIndex}`).textContent = partBP;
         });
 
         document.getElementById("totalEnergy").textContent = totalEnergy;
