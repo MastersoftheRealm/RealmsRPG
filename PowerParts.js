@@ -1,0 +1,35 @@
+let powerParts = [
+    {
+        name: "Read Mind",
+        baseBP: 1,
+        BPIncreaseOpt1: 1,
+        BPIncreaseOpt2: 0,
+        BPIncreaseOpt3: 0,
+        altBP: 0,
+        baseEnergy: 12,
+        energyIncreaseOpt1: 6,
+        energyIncreaseOpt2: 4,
+        energyIncreaseOpt3: 0,
+        altBaseEnergy: 12,
+        currentOpt1Level: 0,
+        currentOpt2Level: 0,
+        currentOpt3Level: 0,
+        useAltCost: false
+    },
+    {
+        name: "Read Mind",
+        baseBP: 1,
+        BPIncreaseOpt1: 1,
+        BPIncreaseOpt2: 0,
+        BPIncreaseOpt3: 0,
+        altBP: 0,
+        baseEnergy: 12,
+        energyIncreaseOpt1: 6,
+        energyIncreaseOpt2: 4,
+        energyIncreaseOpt3: 0,
+        altBaseEnergy: 12,
+        currentOpt1Level: 0,
+        currentOpt2Level: 0,
+        currentOpt3Level: 0,
+        useAltCost: false
+    }
