@@ -27,6 +27,7 @@ let selectedPowerParts = [];
 
 // Function to add a new power part section
 function addPowerPart() {
+    console.log("Button clicked");
     const partIndex = selectedPowerParts.length;
     selectedPowerParts.push({ part: powerParts[0], opt1Level: 0 });
 
