@@ -3,21 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Power Part Selector</title>
+    <title>Power Part Builder</title>
 </head>
-<body style="display: flex; justify-content: center; align-items: center; height: 100vh;">
-    
-    <!-- Dropdown for selecting a power part -->
-    <div style="text-align: center;">
-        <label for="powerSelect">Select Power Part:</label>
-        <select id="powerSelect" onchange="updatePowerPartDetails()">
-            <!-- Options will be populated by JavaScript -->
-        </select>
+<body style="display: flex; flex-direction: column; align-items: center;">
 
-        <!-- Display area for power part details -->
-        <div id="powerDetails" style="margin-top: 20px;">
-            <!-- Power details will appear here -->
-        </div>
+    <!-- Button to add a new power part section -->
+    <button onclick="addPowerPart()">+</button>
+
+    <!-- Container for all power part sections -->
+    <div id="powerPartsContainer" style="margin-top: 20px;"></div>
+
+    <!-- Display for total energy and BP cost -->
+    <div id="totalCosts" style="margin-top: 20px;">
+        <h3>Total Power Costs</h3>
+        <p>Total Energy: <span id="totalEnergy">0</span></p>
+        <p>Total BP: <span id="totalBP">0</span></p>
     </div>
 
     <script src="powerParts.js"></script>
