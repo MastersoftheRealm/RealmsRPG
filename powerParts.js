@@ -155,7 +155,9 @@
         document.getElementById("totalBP").textContent = totalBP;
     }
 
-    document.getElementById("addPowerPartButton").addEventListener("click", addPowerPart);
+    document.addEventListener("DOMContentLoaded", () => {
+        document.getElementById("addPowerPartButton").addEventListener("click", addPowerPart);
+    });
 
     // Expose functions to global scope for inline event handlers
     window.updateSelectedPart = updateSelectedPart;
