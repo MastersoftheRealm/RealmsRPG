@@ -23,6 +23,9 @@
     ];
 
     const selectedPowerParts = [];
+    let range = 0; // Internal default value
+    let area = 1;
+    let duration = 1;
 
     function addPowerPart() {
         const partIndex = selectedPowerParts.length;
@@ -136,6 +139,38 @@
         updateTotalCosts();
     }
 
+    function changeRange(delta) {
+        range = Math.max(0, range + delta);
+        const displayRange = range === 0 ? 1 : range * 3;
+        document.getElementById('rangeValue').textContent = displayRange;
+        document.getElementById('rangeValue').nextSibling.textContent = displayRange > 1 ? ' spaces' : ' space';
+        updateTotalCosts();
+    }
+
+    function changeArea(delta) {
+        area = Math.max(1, area + delta);
+        document.getElementById('areaValue').textContent = area;
+        document.getElementById('areaValue').nextSibling.textContent = area > 1 ? ' spaces' : ' space';
+        updateTotalCosts();
+    }
+
+    function changeDuration(delta) {
+        duration = Math.max(1, duration + delta);
+        document.getElementById('durationValue').textContent = duration;
+        document.getElementById('durationValue').nextSibling.textContent = duration > 1 ? ' rounds' : ' round';
+
+        // Disable checkboxes if duration is 1
+        const checkboxes = document.querySelectorAll('.checkbox-container input');
+        checkboxes.forEach(checkbox => {
+            checkbox.disabled = duration === 1;
+            if (duration === 1) {
+                checkbox.checked = false;
+            }
+        });
+
+        updateTotalCosts();
+    }
+
     function removePowerPart(index) {
         selectedPowerParts.splice(index, 1);
 
@@ -169,7 +204,21 @@
             document.getElementById(`totalBP-${partIndex}`).textContent = partBP;
         });
 
-        document.getElementById("totalEnergy").textContent = totalEnergy;
+        // Calculate duration multiplier based on checkboxes
+        const focusChecked = document.getElementById('focusCheckbox').checked;
+        const noHarmChecked = document.getElementById('noHarmCheckbox').checked;
+        const endsOnceChecked = document.getElementById('endsOnceCheckbox').checked;
+
+        let durationMultiplier = 0.125;
+        if (focusChecked) durationMultiplier /= 2;
+        if (noHarmChecked) durationMultiplier /= 2;
+        if (endsOnceChecked) durationMultiplier /= 2;
+
+        // Add additional options costs
+        totalEnergy += (range * 0.5);
+        totalEnergy += (duration - 1) * durationMultiplier * totalEnergy;
+
+        document.getElementById("totalEnergy").textContent = totalEnergy.toFixed(2);
         document.getElementById("totalBP").textContent = totalBP;
     }
 
@@ -181,5 +230,9 @@
     window.updateSelectedPart = updateSelectedPart;
     window.changeOptionLevel = changeOptionLevel;
     window.toggleAltEnergy = toggleAltEnergy;
+    window.changeRange = changeRange;
+    window.changeArea = changeArea;
+    window.changeDuration = changeDuration;
     window.removePowerPart = removePowerPart;
+    window.updateTotalCosts = updateTotalCosts;
 })();
