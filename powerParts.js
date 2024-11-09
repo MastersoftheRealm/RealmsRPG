@@ -16,7 +16,7 @@ let powerParts = [
         opt2Description: "Increase the maximum increase cap by +1.",
         BPIncreaseOpt2: 0,
 
-        // Option 3: (Example placeholder, you can add your own)
+        // Option 3: Placeholder
         opt3Cost: 5,
         opt3Description: "Placeholder for a third option description.",
         BPIncreaseOpt3: 0,
@@ -73,7 +73,7 @@ function addPowerPart() {
             <span>Level: <span id="opt3Level-${partIndex}">0</span></span>
 
             <!-- Toggle Alternative Energy Cost -->
-            <button onclick="toggleAltEnergy(${partIndex})">Use Alternative Energy Cost</button>
+            <button onclick="toggleAltEnergy(${partIndex})">Toggle Alternative Energy Cost</button>
             <p id="altEnergyDescription-${partIndex}" style="display: none;">${powerParts[0].altEnergyDescription}</p>
         </div>
         <button onclick="removePowerPart(${partIndex})" style="margin-top: 10px;">-</button>
@@ -165,8 +165,8 @@ function updateTotalCosts() {
         totalEnergy += partEnergy;
         totalBP += partBP;
 
-        document.getElementById(`totalEnergy-${partIndex}`).textContent = partEnergy;
-        document.getElementById(`totalBP-${partIndex}`).textContent = partBP;
+        document.getElementById(`totalEnergy-${partIndex}`)?.textContent = partEnergy;
+        document.getElementById(`totalBP-${partIndex}`)?.textContent = partBP;
     });
 
     document.getElementById("totalEnergy").textContent = totalEnergy;
