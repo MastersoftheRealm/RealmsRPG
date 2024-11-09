@@ -33,6 +33,8 @@ function addPowerPart() {
     // Create new section for the power part
     const powerPartSection = document.createElement("div");
     powerPartSection.id = `powerPart-${partIndex}`;
+    powerPartSection.style.marginBottom = "20px"; // Adds space between each section
+
     powerPartSection.innerHTML = `
         <select onchange="updateSelectedPart(${partIndex}, this.value)">
             ${powerParts.map((part, index) => `<option value="${index}">${part.name}</option>`).join('')}
@@ -45,7 +47,8 @@ function addPowerPart() {
             <button onclick="changeOptionLevel(${partIndex}, 1)">Increase Opt1</button>
             <button onclick="changeOptionLevel(${partIndex}, -1)">Decrease Opt1</button>
         </div>
-        <button onclick="removePowerPart(${partIndex})">-</button>
+        <!-- This is the "-" button for removing the section -->
+        <button onclick="removePowerPart(${partIndex})" style="margin-top: 10px;">-</button>
     `;
 
     // Add new part section to the container
