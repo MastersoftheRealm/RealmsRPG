@@ -91,14 +91,32 @@ function changeOptionLevel(index, change) {
 }
 
 // Function to remove a power part section
-function removePowerPart() {
-    console.log("Button clicked");
+function removePowerPart(index) {
     // Remove the power part section from the DOM
     const powerPartSection = document.getElementById(`powerPart-${index}`);
-    powerPartSection.remove();
+    if (powerPartSection) {
+        powerPartSection.remove();
+    }
 
     // Remove the power part from the selectedPowerParts array
     selectedPowerParts.splice(index, 1);
+
+    // Reassign IDs to each remaining part for consistent indexes
+    document.querySelectorAll('#powerPartsContainer > div').forEach((section, newIndex) => {
+        section.id = `powerPart-${newIndex}`;
+        section.querySelector("select").setAttribute("onchange", `updateSelectedPart(${newIndex}, this.value)`);
+        section.querySelectorAll("button").forEach(button => {
+            if (button.textContent === "-") {
+                button.setAttribute("onclick", `removePowerPart(${newIndex})`);
+            }
+            if (button.textContent === "Increase Opt1") {
+                button.setAttribute("onclick", `changeOptionLevel(${newIndex}, 1)`);
+            }
+            if (button.textContent === "Decrease Opt1") {
+                button.setAttribute("onclick", `changeOptionLevel(${newIndex}, -1)`);
+            }
+        });
+    });
 
     // Update total costs
     updateTotalCosts();
