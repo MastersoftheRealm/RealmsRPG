@@ -93,17 +93,17 @@ function changeOptionLevel(index, change) {
 
 // Function to remove a power part section
 function removePowerPart(index) {
-    console.log("Removing part at index:", index);
-    // Remove the power part section from the DOM
+    console.log("Removing part at index:", index); // Debug log
+    // Rest of the code to remove the part
     const powerPartSection = document.getElementById(`powerPart-${index}`);
     if (powerPartSection) {
         powerPartSection.remove();
     }
 
-    // Remove the power part from the selectedPowerParts array
+    // Remove from array
     selectedPowerParts.splice(index, 1);
 
-    // Reassign IDs to each remaining part for consistent indexes
+    // Reassign IDs and update event handlers
     document.querySelectorAll('#powerPartsContainer > div').forEach((section, newIndex) => {
         section.id = `powerPart-${newIndex}`;
         section.querySelector("select").setAttribute("onchange", `updateSelectedPart(${newIndex}, this.value)`);
