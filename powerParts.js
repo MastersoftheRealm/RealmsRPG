@@ -88,7 +88,8 @@ function changeOptionLevel(index, change) {
 }
 
 // Function to remove a power part section
-function removePowerPart(index) {
+function removePowerPart() {
+    console.log("Button clicked");
     // Remove the power part section from the DOM
     const powerPartSection = document.getElementById(`powerPart-${index}`);
     powerPartSection.remove();
