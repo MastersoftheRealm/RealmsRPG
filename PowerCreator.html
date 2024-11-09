@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Power Part Selector</title>
+</head>
+<body style="display: flex; justify-content: center; align-items: center; height: 100vh;">
+    
+    <!-- Dropdown for selecting a power part -->
+    <div style="text-align: center;">
+        <label for="powerSelect">Select Power Part:</label>
+        <select id="powerSelect" onchange="updatePowerPartDetails()">
+            <!-- Options will be populated by JavaScript -->
+        </select>
+
+        <!-- Display area for power part details -->
+        <div id="powerDetails" style="margin-top: 20px;">
+            <!-- Power details will appear here -->
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
