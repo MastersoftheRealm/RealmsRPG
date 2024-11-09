@@ -1,24 +1,122 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&family=Uncial+Antiqua&display=swap');
+
 body {
     display: flex;
     flex-direction: column;
     align-items: center;
     margin: 0;
     padding: 0;
-    font-family: Arial, sans-serif;
+    font-family: 'Nunito', sans-serif;
+    background-color: #f4f4f4;
 }
 
 #addPowerPartButton {
     margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+}
+
+#addPowerPartButton:hover {
+    background-color: #0056b3;
 }
 
 #powerPartsContainer {
     margin-top: 20px;
+    width: 80%;
 }
 
 #totalCosts {
     margin-top: 20px;
+    padding: 10px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .power-part-section {
     margin-bottom: 20px;
+    padding: 15px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.power-part-section h3 {
+    font-family: 'Uncial Antiqua', cursive;
+    font-size: 24px;
+    margin: 0;
+}
+
+.power-part-section p {
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px;
+    margin: 5px 0;
+}
+
+.power-part-section h4 {
+    font-family: 'Nunito', sans-serif;
+    font-size: 16px;
+    margin: 10px 0 5px;
+}
+
+.power-part-section button {
+    margin: 5px;
+    padding: 5px 10px;
+    font-size: 14px;
+    border-radius: 5px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+}
+
+.power-part-section button:hover {
+    background-color: #0056b3;
+}
+
+.power-part-section .delete-button {
+    background-color: #dc3545;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.power-part-section .delete-button:hover {
+    background-color: #c82333;
+}
+
+.small-text {
+    font-size: 0.8em;
+    margin-left: 10px;
+}
+
+.option-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.option-box {
+    flex: 1;
+    margin: 0 5px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.power-part-section select {
+    display: block;
+    margin: 0 auto 10px auto;
+    padding: 5px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: #fff;
 }
