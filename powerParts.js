@@ -1,20 +1,29 @@
-// Array of power parts
+// Array of power parts with descriptions and additional options
 let powerParts = [
     {
-        name: "Read Mind",
+        name: "Ability Increase",
+        description: "Increase the target’s Ability by +1 for the duration.",
         baseBP: 1,
-        BPIncreaseOpt1: 1,
-        BPIncreaseOpt2: 1,
-        BPIncreaseOpt3: 1,
-        altBP: 0,
-        baseEnergy: 12,
-        energyIncreaseOpt1: 6,
-        energyIncreaseOpt2: 4,
-        energyIncreaseOpt3: 2,
+        baseEnergy: 10,
+
+        // Option 1: Increase by additional +1
+        opt1Cost: 10,
+        opt1Description: "Add additional +1 to the ability, to a maximum of +8. No ability can be increased above 10 using this part.",
+        BPIncreaseOpt1: 0,
+
+        // Option 2: Increase max cap by +1
+        opt2Cost: 4,
+        opt2Description: "Increase the maximum increase cap by +1.",
+        BPIncreaseOpt2: 0,
+
+        // Option 3: (Example placeholder, you can add your own)
+        opt3Cost: 5,
+        opt3Description: "Placeholder for a third option description.",
+        BPIncreaseOpt3: 0,
+
+        // Alternate energy cost
         altBaseEnergy: 8,
-        currentOpt1Level: 0,
-        currentOpt2Level: 0,
-        currentOpt3Level: 0,
+        altEnergyDescription: "Use a lower base energy cost at 8 EN, sacrificing some effectiveness.",
         useAltCost: false
     },
     // Add more power parts as needed...
@@ -30,33 +39,42 @@ function addPowerPart() {
 
     const powerPartSection = document.createElement("div");
     powerPartSection.id = `powerPart-${partIndex}`;
+    powerPartSection.style.marginBottom = "20px";
     powerPartSection.innerHTML = `
+        <h3>${powerParts[0].name}</h3>
+        <p>${powerParts[0].description}</p>
         <select onchange="updateSelectedPart(${partIndex}, this.value)">
             ${powerParts.map((part, index) => `<option value="${index}">${part.name}</option>`).join('')}
         </select>
+
         <div>
             <p>Base BP: <span id="baseBP-${partIndex}">${powerParts[0].baseBP}</span></p>
             <p>Base Energy: <span id="baseEnergy-${partIndex}">${powerParts[0].baseEnergy}</span></p>
-            <p>Total BP: <span id="totalBP-${partIndex}">${powerParts[0].baseBP}</span></p>
-            <p>Total Energy: <span id="totalEnergy-${partIndex}">${powerParts[0].baseEnergy}</span></p>
             
-            <!-- Increase Option 1 -->
+            <!-- Option 1 -->
+            <h4>Option 1: ${powerParts[0].opt1Cost} EN</h4>
+            <p>${powerParts[0].opt1Description}</p>
             <button onclick="changeOptionLevel(${partIndex}, 'opt1', 1)">Increase Opt1</button>
             <button onclick="changeOptionLevel(${partIndex}, 'opt1', -1)">Decrease Opt1</button>
             <span>Level: <span id="opt1Level-${partIndex}">0</span></span>
             
-            <!-- Increase Option 2 -->
+            <!-- Option 2 -->
+            <h4>Option 2: ${powerParts[0].opt2Cost} EN</h4>
+            <p>${powerParts[0].opt2Description}</p>
             <button onclick="changeOptionLevel(${partIndex}, 'opt2', 1)">Increase Opt2</button>
             <button onclick="changeOptionLevel(${partIndex}, 'opt2', -1)">Decrease Opt2</button>
             <span>Level: <span id="opt2Level-${partIndex}">0</span></span>
 
-            <!-- Increase Option 3 -->
+            <!-- Option 3 -->
+            <h4>Option 3: ${powerParts[0].opt3Cost} EN</h4>
+            <p>${powerParts[0].opt3Description}</p>
             <button onclick="changeOptionLevel(${partIndex}, 'opt3', 1)">Increase Opt3</button>
             <button onclick="changeOptionLevel(${partIndex}, 'opt3', -1)">Decrease Opt3</button>
             <span>Level: <span id="opt3Level-${partIndex}">0</span></span>
 
             <!-- Toggle Alternative Energy Cost -->
             <button onclick="toggleAltEnergy(${partIndex})">Use Alternative Energy Cost</button>
+            <p id="altEnergyDescription-${partIndex}" style="display: none;">${powerParts[0].altEnergyDescription}</p>
         </div>
         <button onclick="removePowerPart(${partIndex})" style="margin-top: 10px;">-</button>
     `;
@@ -76,8 +94,7 @@ function updateSelectedPart(index, selectedValue) {
 
     document.getElementById(`baseBP-${index}`).textContent = selectedPart.baseBP;
     document.getElementById(`baseEnergy-${index}`).textContent = selectedPart.baseEnergy;
-    document.getElementById(`totalBP-${index}`).textContent = selectedPart.baseBP;
-    document.getElementById(`totalEnergy-${index}`).textContent = selectedPart.baseEnergy;
+    document.getElementById(`altEnergyDescription-${index}`).style.display = "none";
 
     updateTotalCosts();
 }
@@ -86,11 +103,10 @@ function updateSelectedPart(index, selectedValue) {
 function changeOptionLevel(index, option, delta) {
     const part = selectedPowerParts[index];
     const levelKey = `${option}Level`;
-    const energyIncreaseKey = `energyIncrease${option.charAt(3)}`;
+    const energyIncreaseKey = `opt${option.charAt(3)}Cost`;
 
     part[levelKey] = Math.max(0, part[levelKey] + delta);
 
-    // Update the level display for this option
     const levelDisplay = document.getElementById(`${levelKey}-${index}`);
     if (levelDisplay) {
         levelDisplay.textContent = part[levelKey];
@@ -105,7 +121,15 @@ function toggleAltEnergy(index) {
     part.useAltCost = !part.useAltCost;
 
     const energyDisplay = document.getElementById(`baseEnergy-${index}`);
-    energyDisplay.textContent = part.useAltCost ? part.part.altBaseEnergy : part.part.baseEnergy;
+    const altDescription = document.getElementById(`altEnergyDescription-${index}`);
+    
+    if (part.useAltCost) {
+        energyDisplay.textContent = part.part.altBaseEnergy;
+        altDescription.style.display = "block";
+    } else {
+        energyDisplay.textContent = part.part.baseEnergy;
+        altDescription.style.display = "none";
+    }
 
     updateTotalCosts();
 }
@@ -130,9 +154,9 @@ function updateTotalCosts() {
         let partEnergy = partData.useAltCost ? part.altBaseEnergy : part.baseEnergy;
         let partBP = part.baseBP;
 
-        partEnergy += part.energyIncreaseOpt1 * partData.opt1Level;
-        partEnergy += part.energyIncreaseOpt2 * partData.opt2Level;
-        partEnergy += part.energyIncreaseOpt3 * partData.opt3Level;
+        partEnergy += part.opt1Cost * partData.opt1Level;
+        partEnergy += part.opt2Cost * partData.opt2Level;
+        partEnergy += part.opt3Cost * partData.opt3Level;
 
         partBP += part.BPIncreaseOpt1 * partData.opt1Level;
         partBP += part.BPIncreaseOpt2 * partData.opt2Level;
@@ -141,7 +165,6 @@ function updateTotalCosts() {
         totalEnergy += partEnergy;
         totalBP += partBP;
 
-        // Update individual part totals in UI
         document.getElementById(`totalEnergy-${partIndex}`).textContent = partEnergy;
         document.getElementById(`totalBP-${partIndex}`).textContent = partBP;
     });
