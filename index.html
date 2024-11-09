@@ -4,17 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Power Part Builder</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
-<body style="display: flex; flex-direction: column; align-items: center;">
+<body>
 
     <!-- Button to add a new power part section -->
-    <button onclick="addPowerPart()">+</button>
+    <button id="addPowerPartButton">+</button>
 
     <!-- Container for all power part sections -->
-    <div id="powerPartsContainer" style="margin-top: 20px;"></div>
+    <div id="powerPartsContainer"></div>
 
     <!-- Display for total energy and BP cost -->
-    <div id="totalCosts" style="margin-top: 20px;">
+    <div id="totalCosts">
         <h3>Total Power Costs</h3>
         <p>Total Energy: <span id="totalEnergy">0</span></p>
         <p>Total BP: <span id="totalBP">0</span></p>
