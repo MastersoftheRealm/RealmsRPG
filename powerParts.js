@@ -27,6 +27,31 @@
     let area = 1;
     let duration = 1;
 
+    const areaEffectDescriptions = {
+        none: "Area of Effect is one target or once.",
+        sphere: "+25% EN: Add a sphere of effect with a 1-space radius centered on yourself or a point within range that you can see. The power affects all targets within this area. +25% EN: Increase the radius by +1. Roll one attack against all targets' relevant defense.",
+        cylinder: "+25% EN: Add a cylinder of effect with a 1-space radius and a 2 space height centered on yourself or a point within range that you can see. The power affects all targets within this area. +25% EN: Increase the radius by +1 or to increase the height by 4. Roll one attack against all targets' relevant defense.",
+        cone: "+12.5% EN: Create a 45-degree angle cone that goes directly out from yourself for 2 spaces. +12.5% EN: Increase this effect by +1 space. Roll one attack against all targets' relevant defense.",
+        line: "+25% EN: Each creature occupying a space directly between you and the power's target is affected by this power. Roll attack and damage once and apply it to all creatures affected.",
+        object: "+2 EN: Each object occupying a space between you and the power's target takes 1d2 magic damage. +100% EN: For each additional 1d2 of damage.",
+        space: "+25% EN: Each space directly between you and this power's target is affected for the power's duration. A creature that begins its turn in one of these spaces must roll the relevant defense against your potency or become affected.",
+        jump: "+2 EN: Power jumps from the location hit to an adjacent space of your choice, affecting that space as well. +200% EN: For each additional space jumped. You may choose to pay +100% EN to affect only the adjacent space, skipping the initial target space (but still paying +200% EN per additional space jumped after that).",
+        additionalTarget: "+12.5% EN: When you affect a target with this power, you may choose a new target within half of the power's range and make an attack roll against that target. +12.5% EN: Increase the number of creatures this power can jump to by 1 (base is 1 jump).",
+        expanding: "+50% EN: At the end of your turn after the round in which power was used its area of effect increases 1 space in all directions.",
+        targetOnly: "-25% EN: When you first use this power and at the beginning of the turn the power was used you can choose one creature within its area of effect to target with the power. The power can only target and affect creatures in this way. You don't need to see a target to make it the target of the power."
+    };
+
+    const actionTypeDescriptions = {
+        basic: "Basic Action",
+        free: "+50% EN: This power uses a free action to activate instead of a basic action.",
+        quick: "+25% EN: This power uses a quick action to activate instead of a basic action.",
+        long3: "-12.5% EN: This power takes 1 more AP to perform (cannot be added to a quick or free action power).",
+        long4: "-12.5% EN: For each additional 1 AP required. This type of power can only be used with this reduced cost if used inside combat and does not linger longer than 1 minute (10 rounds).",
+        reaction: "+25% EN: This power uses a basic reaction instead of a basic action."
+    };
+
+    let areaEffectLevel = 0;
+
     function addPowerPart() {
         const partIndex = selectedPowerParts.length;
         selectedPowerParts.push({ part: powerParts[0], opt1Level: 0, opt2Level: 0, opt3Level: 0, useAltCost: false });
@@ -185,6 +210,30 @@
         updateTotalCosts();
     }
 
+    function updateAreaEffect() {
+        const areaEffect = document.getElementById('areaEffect').value;
+        const description = areaEffectDescriptions[areaEffect];
+        document.getElementById('areaEffectDescription').textContent = description;
+        updateTotalCosts();
+    }
+
+    function changeAreaEffectLevel(delta) {
+        areaEffectLevel = Math.max(0, areaEffectLevel + delta);
+        document.getElementById('areaEffectLevelValue').textContent = areaEffectLevel;
+        updateTotalCosts();
+    }
+
+    function updateActionType() {
+        const actionType = document.getElementById('actionType').value;
+        const reactionChecked = document.getElementById('reactionCheckbox').checked;
+        let description = actionTypeDescriptions[actionType];
+        if (reactionChecked) {
+            description += " " + actionTypeDescriptions.reaction;
+        }
+        document.getElementById('actionTypeDescription').textContent = description;
+        updateTotalCosts();
+    }
+
     function updateTotalCosts() {
         let totalEnergy = 0;
         let totalBP = 0;
@@ -235,6 +284,40 @@
 
         // Add additional options costs
         totalEnergy += (range * 0.5);
+
+        // Add area effect cost
+        const areaEffect = document.getElementById('areaEffect').value;
+        const areaEffectCost = {
+            none: 0,
+            sphere: 0.25,
+            cylinder: 0.25,
+            cone: 0.125,
+            line: 0.25,
+            object: 2,
+            space: 0.25,
+            jump: 2,
+            additionalTarget: 0.125,
+            expanding: 0.5,
+            targetOnly: -0.25
+        }[areaEffect];
+        totalEnergy += areaEffectLevel * areaEffectCost * totalEnergy;
+
+        // Add action type cost
+        const actionType = document.getElementById('actionType').value;
+        const reactionChecked = document.getElementById('reactionCheckbox').checked;
+        const actionTypeCost = {
+            basic: 0,
+            free: 0.5,
+            quick: 0.25,
+            long3: -0.125,
+            long4: -0.125
+        }[actionType];
+        totalEnergy += actionTypeCost * totalEnergy;
+        if (reactionChecked) {
+            totalEnergy += 0.25 * totalEnergy;
+        }
+
+        // Apply duration multiplier
         totalEnergy += (duration - 1) * durationMultiplier * lingerEnergy * sustainReduction;
 
         document.getElementById("totalEnergy").textContent = totalEnergy.toFixed(2);
@@ -254,4 +337,7 @@
     window.changeDuration = changeDuration;
     window.removePowerPart = removePowerPart;
     window.updateTotalCosts = updateTotalCosts;
+    window.updateAreaEffect = updateAreaEffect;
+    window.changeAreaEffectLevel = changeAreaEffectLevel;
+    window.updateActionType = updateActionType;
 })();
