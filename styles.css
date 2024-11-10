@@ -213,3 +213,52 @@ body {
     border: 1px solid #ccc;
     font-family: 'Nunito', sans-serif; /* Better font */
 }
+
+.area-effect-container {
+    margin-top: 10px;
+}
+
+.area-effect-container label {
+    margin-right: 5px;
+}
+
+.area-effect-container select {
+    padding: 2px 5px;
+    font-size: 14px;
+    border-radius: 5px; /* Rounded edges */
+    border: 1px solid #ccc;
+    font-family: 'Nunito', sans-serif; /* Better font */
+}
+
+.area-effect-container .button-container {
+    display: inline-flex; /* Ensure the buttons are on the same line */
+    margin-left: 10px;
+    gap: 5px; /* Add spacing between the buttons */
+}
+
+.action-type-box {
+    margin-top: 10px;
+}
+
+.action-type-box h4 {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.action-type-box select {
+    padding: 2px 5px;
+    font-size: 14px;
+    border-radius: 5px; /* Rounded edges */
+    border: 1px solid #ccc;
+    font-family: 'Nunito', sans-serif; /* Better font */
+    margin-right: 10px;
+}
+
+.action-type-box label {
+    display: inline-block;
+    margin-left: 10px;
+}
+
+.action-type-box #actionTypeDescription {
+    margin-top: 10px;
+}
