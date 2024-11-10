@@ -31,7 +31,7 @@
                     </div>
                 </h4>
             </div>
-            <div class="option-box">
+            <div class="option-box duration-box">
                 <h4>Duration: <span id="durationValue">1</span> round
                     <div class="button-container">
                         <button class="small-button" onclick="changeDuration(1)">+</button>
@@ -39,9 +39,23 @@
                     </div>
                 </h4>
                 <div class="checkbox-container">
-                    <label><input type="checkbox" id="focusCheckbox" onclick="updateTotalCosts()" disabled> Focus</label><br>
-                    <label><input type="checkbox" id="noHarmCheckbox" onclick="updateTotalCosts()" disabled> No direct harm or adaptation parts</label><br>
-                    <label><input type="checkbox" id="endsOnceCheckbox" onclick="updateTotalCosts()" disabled> Power ends when used once/activated</label>
+                    <div class="checkbox-column left-column">
+                        <label><input type="checkbox" id="focusCheckbox" onclick="updateTotalCosts()"> Focus</label>
+                        <div class="sustain-container">
+                            <label for="sustainValue">Sustain:</label>
+                            <select id="sustainValue" onchange="updateTotalCosts()">
+                                <option value="0">0</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="checkbox-column right-column">
+                        <label><input type="checkbox" id="noHarmCheckbox" onclick="updateTotalCosts()"> No direct harm or adaptation parts</label>
+                        <label><input type="checkbox" id="endsOnceCheckbox" onclick="updateTotalCosts()"> Power ends when used once/activated</label>
+                    </div>
                 </div>
             </div>
         </div>
