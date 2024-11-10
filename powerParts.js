@@ -1,34 +1,16 @@
+import powerPartsData from './powerPartsData.js';
+
 (() => {
-    const powerParts = [
-        {
-            name: "Ability Increase",
-            description: "Increase the target’s Ability by +1 for the duration.",
-            baseBP: 1,
-            baseEnergy: 10,
-            opt1Cost: 10,
-            opt1Description: "Add additional +1 to the ability, to a maximum of +8. No ability can be increased above 10 using this part.",
-            BPIncreaseOpt1: 0,
-            opt2Cost: 4,
-            opt2Description: "Increase the maximum increase cap by +1.",
-            BPIncreaseOpt2: 0,
-            opt3Cost: 5,
-            opt3Description: "Placeholder for a third option description.",
-            BPIncreaseOpt3: 0,
-            altBaseEnergy: 8,
-            altEnergyDescription: "Use a lower base energy cost at 8 EN, sacrificing some effectiveness.",
-            altBP: 0,
-            useAltCost: false
-        },
-        // Add more power parts as needed...
-    ];
+    const powerParts = powerPartsData;
 
     const selectedPowerParts = [];
     let range = 0; // Internal default value
     let area = 1;
     let duration = 1;
+    let areaEffectLevel = 0; // Initialize areaEffectLevel
 
     const areaEffectDescriptions = {
-        none: "Area of Effect is one target or once.",
+        none: "Area of Effect is one target or one space.",
         sphere: "+25% EN: Add a sphere of effect with a 1-space radius centered on yourself or a point within range that you can see. The power affects all targets within this area. +25% EN: Increase the radius by +1. Roll one attack against all targets' relevant defense.",
         cylinder: "+25% EN: Add a cylinder of effect with a 1-space radius and a 2 space height centered on yourself or a point within range that you can see. The power affects all targets within this area. +25% EN: Increase the radius by +1 or to increase the height by 4. Roll one attack against all targets' relevant defense.",
         cone: "+12.5% EN: Create a 45-degree angle cone that goes directly out from yourself for 2 spaces. +12.5% EN: Increase this effect by +1 space. Roll one attack against all targets' relevant defense.",
@@ -50,8 +32,6 @@
         reaction: "+25% EN: This power uses a basic reaction instead of a basic action."
     };
 
-    let areaEffectLevel = 0;
-
     function addPowerPart() {
         const partIndex = selectedPowerParts.length;
         selectedPowerParts.push({ part: powerParts[0], opt1Level: 0, opt2Level: 0, opt3Level: 0, useAltCost: false });
@@ -63,56 +43,61 @@
             <select onchange="updateSelectedPart(${partIndex}, this.value)">
                 ${powerParts.map((part, index) => `<option value="${index}">${part.name}</option>`).join('')}
             </select>
-            <h3>${powerParts[0].name} <span class="small-text">Energy: <span id="baseEnergy-${partIndex}">${powerParts[0].baseEnergy}</span></span> <span class="small-text">Building Points: <span id="baseBP-${partIndex}">${powerParts[0].baseBP}</span></span></h3>
-            <p>Part EN: <span id="totalEnergy-${partIndex}">${powerParts[0].baseEnergy}</span> Part BP: <span id="totalBP-${partIndex}">${powerParts[0].baseBP}</span></p>
-            <p>${powerParts[0].description}</p>
-            
-            <div class="option-container">
-                <!-- Option 1 -->
-                <div class="option-box">
-                    <h4>Energy: +${powerParts[0].opt1Cost}</h4>
-                    <button onclick="changeOptionLevel(${partIndex}, 'opt1', 1)">+</button>
-                    <button onclick="changeOptionLevel(${partIndex}, 'opt1', -1)">-</button>
-                    <span>Level: <span id="opt1Level-${partIndex}">0</span></span>
-                    <p>${powerParts[0].opt1Description}</p>
-                </div>
-                
-                <!-- Option 2 -->
-                <div class="option-box">
-                    <h4>Energy: +${powerParts[0].opt2Cost}</h4>
-                    <button onclick="changeOptionLevel(${partIndex}, 'opt2', 1)">+</button>
-                    <button onclick="changeOptionLevel(${partIndex}, 'opt2', -1)">-</button>
-                    <span>Level: <span id="opt2Level-${partIndex}">0</span></span>
-                    <p>${powerParts[0].opt2Description}</p>
-                </div>
-
-                <!-- Option 3 -->
-                <div class="option-box">
-                    <h4>Energy: +${powerParts[0].opt3Cost}</h4>
-                    <button onclick="changeOptionLevel(${partIndex}, 'opt3', 1)">+</button>
-                    <button onclick="changeOptionLevel(${partIndex}, 'opt3', -1)">-</button>
-                    <span>Level: <span id="opt3Level-${partIndex}">0</span></span>
-                    <p>${powerParts[0].opt3Description}</p>
-                </div>
-
-                <!-- Alternative Energy Cost -->
-                <div class="option-box">
-                    <h4>Alternate Base Energy: ${powerParts[0].altBaseEnergy}</h4>
-                    <button onclick="toggleAltEnergy(${partIndex})">Toggle</button>
-                    <p>${powerParts[0].altEnergyDescription}</p>
-                </div>
+            <div id="partContent-${partIndex}">
+                ${generatePartContent(partIndex, powerParts[0])}
             </div>
-
-            <!-- Does not linger checkbox -->
-            <div class="linger-container">
-                <label><input type="checkbox" id="lingerCheckbox-${partIndex}" onclick="updateTotalCosts()"> Does not linger</label>
-            </div>
-
             <button class="delete-button" onclick="removePowerPart(${partIndex})">Delete</button>
         `;
         document.getElementById("powerPartsContainer").appendChild(powerPartSection);
 
         updateTotalCosts();
+    }
+
+    function generatePartContent(partIndex, part) {
+        return `
+            <h3>${part.name} <span class="small-text">Energy: <span id="baseEnergy-${partIndex}">${part.baseEnergy}</span></span> <span class="small-text">Building Points: <span id="baseBP-${partIndex}">${part.baseBP}</span></span></h3>
+            <p>Part EN: <span id="totalEnergy-${partIndex}">${part.baseEnergy}</span> Part BP: <span id="totalBP-${partIndex}">${part.baseBP}</span></p>
+            <p>${part.description}</p>
+            
+            <div class="option-container">
+                ${part.opt1Cost !== 0 || part.opt1Description ? `
+                <div class="option-box">
+                    <h4>Energy: ${part.opt1Cost >= 0 ? '+' : ''}${part.opt1Cost}</h4>
+                    <button onclick="changeOptionLevel(${partIndex}, 'opt1', 1)">+</button>
+                    <button onclick="changeOptionLevel(${partIndex}, 'opt1', -1)">-</button>
+                    <span>Level: <span id="opt1Level-${partIndex}">0</span></span>
+                    <p>${part.opt1Description}</p>
+                </div>` : ''}
+                
+                ${part.opt2Cost !== 0 || part.opt2Description ? `
+                <div class="option-box">
+                    <h4>Energy: ${part.opt2Cost >= 0 ? '+' : ''}${part.opt2Cost}</h4>
+                    <button onclick="changeOptionLevel(${partIndex}, 'opt2', 1)">+</button>
+                    <button onclick="changeOptionLevel(${partIndex}, 'opt2', -1)">-</button>
+                    <span>Level: <span id="opt2Level-${partIndex}">0</span></span>
+                    <p>${part.opt2Description}</p>
+                </div>` : ''}
+
+                ${part.opt3Cost !== 0 || part.opt3Description ? `
+                <div class="option-box">
+                    <h4>Energy: ${part.opt3Cost >= 0 ? '+' : ''}${part.opt3Cost}</h4>
+                    <button onclick="changeOptionLevel(${partIndex}, 'opt3', 1)">+</button>
+                    <button onclick="changeOptionLevel(${partIndex}, 'opt3', -1)">-</button>
+                    <span>Level: <span id="opt3Level-${partIndex}">0</span></span>
+                    <p>${part.opt3Description}</p>
+                </div>` : ''}
+            </div>
+
+            <div class="option-box">
+                <h4>Alternate Base Energy: ${part.altBaseEnergy}</h4>
+                <button id="altEnergyButton-${partIndex}" class="alt-energy-button" onclick="toggleAltEnergy(${partIndex})">Toggle</button>
+                <p>${part.altEnergyDescription}</p>
+            </div>
+
+            <div class="linger-container">
+                <label><input type="checkbox" id="lingerCheckbox-${partIndex}" onclick="updateTotalCosts()"> Does not linger</label>
+            </div>
+        `;
     }
 
     function updateSelectedPart(index, selectedValue) {
@@ -123,9 +108,8 @@
         selectedPowerParts[index].opt3Level = 0;
         selectedPowerParts[index].useAltCost = false;
 
-        document.getElementById(`baseBP-${index}`).textContent = selectedPart.baseBP;
-        document.getElementById(`baseEnergy-${index}`).textContent = selectedPart.baseEnergy;
-        document.getElementById(`altEnergyDescription-${index}`).style.display = "none";
+        const partContent = document.getElementById(`partContent-${index}`);
+        partContent.innerHTML = generatePartContent(index, selectedPart);
 
         updateTotalCosts();
     }
@@ -143,7 +127,7 @@
         }
 
         const optionElement = document.querySelector(`#powerPart-${index} .option-box:nth-of-type(${option === 'opt1' ? 1 : option === 'opt2' ? 2 : option === 'opt3' ? 3 : 4}) h4`);
-        optionElement.innerHTML = `Energy: +${part.part[energyIncreaseKey]}`;
+        optionElement.innerHTML = `Energy: ${part.part[energyIncreaseKey] >= 0 ? '+' : ''}${part.part[energyIncreaseKey]}`;
 
         const descriptionElement = document.querySelector(`#powerPart-${index} .option-box:nth-of-type(${option === 'opt1' ? 1 : option === 'opt2' ? 2 : option === 'opt3' ? 3 : 4}) p`);
         descriptionElement.innerHTML = part.part[`${option}Description`];
@@ -151,21 +135,15 @@
         updateTotalCosts();
     }
 
-    function toggleAltEnergy(index) {
-        const part = selectedPowerParts[index];
-        part.useAltCost = !part.useAltCost;
-
-        const energyDisplay = document.getElementById(`baseEnergy-${index}`);
-        const altDescription = document.getElementById(`altEnergyDescription-${index}`);
-        
-        if (part.useAltCost) {
-            energyDisplay.textContent = part.part.altBaseEnergy;
-            altDescription.style.display = "block";
+    function toggleAltEnergy(partIndex) {
+        const partData = selectedPowerParts[partIndex];
+        partData.useAltCost = !partData.useAltCost;
+        const button = document.getElementById(`altEnergyButton-${partIndex}`);
+        if (partData.useAltCost) {
+            button.classList.add('toggled');
         } else {
-            energyDisplay.textContent = part.part.baseEnergy;
-            altDescription.style.display = "none";
+            button.classList.remove('toggled');
         }
-
         updateTotalCosts();
     }
 
@@ -238,54 +216,68 @@
         let totalEnergy = 0;
         let totalBP = 0;
         let lingerEnergy = 0;
-
+    
+        // Separate power parts by type
+        const baseEnergyParts = [];
+        const increaseParts = [];
+        const decreaseParts = [];
+    
         selectedPowerParts.forEach((partData, partIndex) => {
+            const part = partData.part;
+            if (part.type === "base") {
+                baseEnergyParts.push(partData);
+            } else if (part.type === "increase") {
+                increaseParts.push(partData);
+            } else if (part.type === "decrease") {
+                decreaseParts.push(partData);
+            }
+        });
+    
+        // Calculate base energy parts
+        baseEnergyParts.forEach((partData, partIndex) => {
             const part = partData.part;
             let partEnergy = partData.useAltCost ? part.altBaseEnergy : part.baseEnergy;
             let partBP = part.baseBP;
-
+    
             partEnergy += part.opt1Cost * partData.opt1Level;
             partEnergy += part.opt2Cost * partData.opt2Level;
             partEnergy += part.opt3Cost * partData.opt3Level;
-
+    
             partBP += part.BPIncreaseOpt1 * partData.opt1Level;
             partBP += part.BPIncreaseOpt2 * partData.opt2Level;
             partBP += part.BPIncreaseOpt3 * partData.opt3Level;
-
+    
             totalEnergy += partEnergy;
             totalBP += partBP;
-
+    
             // Exclude energy cost from duration increase if "Does not linger" is checked
             const lingerCheckbox = document.getElementById(`lingerCheckbox-${partIndex}`);
             if (lingerCheckbox && !lingerCheckbox.checked) {
                 lingerEnergy += partEnergy;
             }
-
+    
             const totalEnergyElement = document.getElementById(`totalEnergy-${partIndex}`);
             const totalBPElement = document.getElementById(`totalBP-${partIndex}`);
             if (totalEnergyElement) totalEnergyElement.textContent = partEnergy;
             if (totalBPElement) totalBPElement.textContent = partBP;
         });
-
-        // Calculate duration multiplier based on checkboxes
-        const focusChecked = document.getElementById('focusCheckbox').checked;
-        const noHarmChecked = document.getElementById('noHarmCheckbox').checked;
-        const endsOnceChecked = document.getElementById('endsOnceCheckbox').checked;
-
-        let durationMultiplier = 0.125;
-        if (focusChecked) durationMultiplier /= 2;
-        if (noHarmChecked) durationMultiplier /= 2;
-        if (endsOnceChecked) durationMultiplier /= 2;
-
-        // Calculate sustain reduction
-        const sustainValue = parseInt(document.getElementById('sustainValue').value, 10);
-        let sustainReduction = 1 - (0.25 + (sustainValue - 1) * 0.125);
-        if (sustainValue === 0) sustainReduction = 1;
-
-        // Add additional options costs
-        totalEnergy += (range * 0.5);
-
-        // Add area effect cost
+    
+        // Apply range cost before any increases or decreases
+        const rangeCost = (range) * 0.5;
+        totalEnergy += rangeCost;
+    
+        // Calculate increase parts
+        increaseParts.forEach((partData) => {
+            const part = partData.part;
+            let partEnergy = totalEnergy * part.baseEnergy;
+    
+            partEnergy += totalEnergy * part.opt1Cost * partData.opt1Level;
+            partEnergy += totalEnergy * part.opt2Cost * partData.opt2Level;
+    
+            totalEnergy += partEnergy;
+        });
+    
+        // Calculate area effect cost
         const areaEffect = document.getElementById('areaEffect').value;
         const areaEffectCost = {
             none: 0,
@@ -301,8 +293,8 @@
             targetOnly: -0.25
         }[areaEffect];
         totalEnergy += areaEffectLevel * areaEffectCost * totalEnergy;
-
-        // Add action type cost
+    
+        // Calculate action type cost (only increases)
         const actionType = document.getElementById('actionType').value;
         const reactionChecked = document.getElementById('reactionCheckbox').checked;
         const actionTypeCost = {
@@ -310,16 +302,47 @@
             free: 0.5,
             quick: 0.25,
             long3: -0.125,
-            long4: -0.125
+            long4: -0.25
         }[actionType];
-        totalEnergy += actionTypeCost * totalEnergy;
+        if (actionTypeCost > 0) {
+            totalEnergy += actionTypeCost * totalEnergy;
+        }
         if (reactionChecked) {
             totalEnergy += 0.25 * totalEnergy;
         }
-
-        // Apply duration multiplier
-        totalEnergy += (duration - 1) * durationMultiplier * lingerEnergy * sustainReduction;
-
+    
+        // Calculate decrease parts
+        decreaseParts.forEach((partData) => {
+            const part = partData.part;
+            let partEnergy = totalEnergy * part.baseEnergy;
+    
+            partEnergy += totalEnergy * part.opt1Cost * partData.opt1Level;
+            partEnergy += totalEnergy * part.opt2Cost * partData.opt2Level;
+    
+            totalEnergy += partEnergy;
+        });
+    
+        // Apply action type cost (only decreases)
+        if (actionTypeCost < 0) {
+            totalEnergy += actionTypeCost * totalEnergy;
+        }
+    
+        // Apply duration multiplier based on the altered total energy value
+        const focusChecked = document.getElementById('focusCheckbox').checked;
+        const noHarmChecked = document.getElementById('noHarmCheckbox').checked;
+        const endsOnceChecked = document.getElementById('endsOnceCheckbox').checked;
+    
+        let durationMultiplier = 0.125;
+        if (focusChecked) durationMultiplier /= 2;
+        if (noHarmChecked) durationMultiplier /= 2;
+        if (endsOnceChecked) durationMultiplier /= 2;
+    
+        const sustainValue = parseInt(document.getElementById('sustainValue').value, 10);
+        let sustainReduction = 1 - (0.25 + (sustainValue - 1) * 0.125);
+        if (sustainValue === 0) sustainReduction = 1;
+    
+        totalEnergy += (duration - 1) * durationMultiplier * totalEnergy * sustainReduction;
+    
         document.getElementById("totalEnergy").textContent = totalEnergy.toFixed(2);
         document.getElementById("totalBP").textContent = totalBP;
     }
