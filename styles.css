@@ -262,3 +262,17 @@ body {
 .action-type-box #actionTypeDescription {
     margin-top: 10px;
 }
+
+.alt-energy-button {
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: 14px;
+}
+
+.alt-energy-button.toggled {
+    background-color: #0056b3; /* Darker blue to indicate toggled state */
+}
