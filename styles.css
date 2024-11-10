@@ -87,7 +87,7 @@ body {
     font-size: 16px;
     margin: 10px 0 5px;
     display: flex; /* Ensure the buttons are on the same line */
-    align-items: center; /* Vertically align the buttons */
+    align-items: center;
 }
 
 .power-part-section button {
@@ -116,6 +116,16 @@ body {
     background-color: #c82333;
 }
 
+.power-part-section select {
+    display: block;
+    margin: 0 auto 10px auto;
+    padding: 5px;
+    font-size: 16px;
+    border-radius: 5px; /* Rounded edges */
+    border: 1px solid #ccc;
+    font-family: 'Nunito', sans-serif; /* Better font */
+}
+
 .small-text {
     font-size: 0.8em;
     margin-left: 10px;
@@ -136,9 +146,18 @@ body {
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
+.range-box, .area-box {
+    width: 30%; /* Make the range and area boxes smaller */
+}
+
+.duration-box {
+    width: 60%; /* Make the duration box larger */
+}
+
 .button-container {
-    display: inline-block; /* Ensure the buttons are on the same line */
+    display: inline-flex; /* Ensure the buttons are on the same line */
     margin-left: 10px;
+    gap: 5px; /* Add spacing between the buttons */
 }
 
 .small-button {
@@ -146,25 +165,51 @@ body {
     font-size: 12px;
     border-radius: 3px;
     border: none;
-    background-color: #87ceeb; /* Slightly darker blue color */
+    background-color: #4682b4; /* Slightly darker blue color */
     color: white;
     cursor: pointer;
 }
 
 .small-button:hover {
-    background-color: #4682b4; /* Darker blue on hover */
+    background-color: #4169e1; /* Darker blue on hover */
 }
 
 .checkbox-container {
+    display: flex;
+    flex-wrap: wrap; /* Wrap text for checkboxes */
     margin-top: 10px;
 }
 
-.power-part-section select {
-    display: block;
-    margin: 0 auto 10px auto;
-    padding: 5px;
-    font-size: 16px;
-    border-radius: 5px;
+.checkbox-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.left-column {
+    align-items: flex-start; /* Align left column items to the start */
+}
+
+.right-column {
+    align-items: flex-end; /* Align right column items to the end */
+}
+
+.checkbox-container label {
+    margin-bottom: 5px;
+}
+
+.sustain-container {
+    margin-top: 10px;
+}
+
+.sustain-container label {
+    margin-right: 5px;
+}
+
+.sustain-container select {
+    padding: 2px 5px;
+    font-size: 14px;
+    border-radius: 5px; /* Rounded edges */
     border: 1px solid #ccc;
-    background-color: #fff;
+    font-family: 'Nunito', sans-serif; /* Better font */
 }
