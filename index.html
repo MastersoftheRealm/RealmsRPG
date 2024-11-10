@@ -15,21 +15,35 @@
     <div id="generalPowerOptionsContainer">
         <h3 class="centered-title">General Power Options</h3>
         <div class="option-container">
-            <div class="option-box">
+            <div class="option-box range-box">
                 <h4>Range: <span id="rangeValue">1</span> space
                     <div class="button-container">
                         <button class="small-button" onclick="changeRange(1)">+</button>
                         <button class="small-button" onclick="changeRange(-1)">-</button>
                     </div>
                 </h4>
-            </div>
-            <div class="option-box">
-                <h4>Area of Effect: <span id="areaValue">1</span> space
+                <div class="area-effect-container">
+                    <label for="areaEffect">Area of Effect:</label>
+                    <select id="areaEffect" onchange="updateAreaEffect()">
+                        <option value="none">None</option>
+                        <option value="sphere">Sphere</option>
+                        <option value="cylinder">Cylinder</option>
+                        <option value="cone">Cone</option>
+                        <option value="line">Line</option>
+                        <option value="object">Object</option>
+                        <option value="space">Space</option>
+                        <option value="jump">Jump</option>
+                        <option value="additionalTarget">Additional Target</option>
+                        <option value="expanding">Expanding</option>
+                        <option value="targetOnly">Target Only</option>
+                    </select>
+                    <span id="areaEffectLevelValue">0</span>
+                    <div id="areaEffectDescription"></div>
                     <div class="button-container">
-                        <button class="small-button" onclick="changeArea(1)">+</button>
-                        <button class="small-button" onclick="changeArea(-1)">-</button>
+                        <button class="small-button" onclick="changeAreaEffectLevel(1)">+</button>
+                        <button class="small-button" onclick="changeAreaEffectLevel(-1)">-</button>
                     </div>
-                </h4>
+                </div>
             </div>
             <div class="option-box duration-box">
                 <h4>Duration: <span id="durationValue">1</span> round
@@ -57,6 +71,18 @@
                         <label><input type="checkbox" id="endsOnceCheckbox" onclick="updateTotalCosts()"> Power ends when used once/activated</label>
                     </div>
                 </div>
+            </div>
+            <div class="option-box action-type-box">
+                <h4>Action Type:</h4>
+                <select id="actionType" onchange="updateActionType()">
+                    <option value="basic">Basic Action</option>
+                    <option value="free">Free Action</option>
+                    <option value="quick">Quick Action</option>
+                    <option value="long3">Long Action (3 AP)</option>
+                    <option value="long4">Long Action (4 AP)</option>
+                </select>
+                <label><input type="checkbox" id="reactionCheckbox" onclick="updateActionType()"> Reaction</label>
+                <div id="actionTypeDescription"></div>
             </div>
         </div>
     </div>
