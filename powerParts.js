@@ -78,6 +78,11 @@
                 </div>
             </div>
 
+            <!-- Does not linger checkbox -->
+            <div class="linger-container">
+                <label><input type="checkbox" id="lingerCheckbox-${partIndex}" onclick="updateTotalCosts()"> Does not linger</label>
+            </div>
+
             <button class="delete-button" onclick="removePowerPart(${partIndex})">Delete</button>
         `;
         document.getElementById("powerPartsContainer").appendChild(powerPartSection);
@@ -160,7 +165,7 @@
         document.getElementById('durationValue').nextSibling.textContent = duration > 1 ? ' rounds' : ' round';
 
         // Disable checkboxes if duration is 1
-        const checkboxes = document.querySelectorAll('.checkbox-container input');
+        const checkboxes = document.querySelectorAll('.checkbox-container input, .linger-container input');
         checkboxes.forEach(checkbox => {
             checkbox.disabled = duration === 1;
             if (duration === 1) {
@@ -183,6 +188,7 @@
     function updateTotalCosts() {
         let totalEnergy = 0;
         let totalBP = 0;
+        let lingerEnergy = 0;
 
         selectedPowerParts.forEach((partData, partIndex) => {
             const part = partData.part;
@@ -200,8 +206,16 @@
             totalEnergy += partEnergy;
             totalBP += partBP;
 
-            document.getElementById(`totalEnergy-${partIndex}`).textContent = partEnergy;
-            document.getElementById(`totalBP-${partIndex}`).textContent = partBP;
+            // Exclude energy cost from duration increase if "Does not linger" is checked
+            const lingerCheckbox = document.getElementById(`lingerCheckbox-${partIndex}`);
+            if (lingerCheckbox && !lingerCheckbox.checked) {
+                lingerEnergy += partEnergy;
+            }
+
+            const totalEnergyElement = document.getElementById(`totalEnergy-${partIndex}`);
+            const totalBPElement = document.getElementById(`totalBP-${partIndex}`);
+            if (totalEnergyElement) totalEnergyElement.textContent = partEnergy;
+            if (totalBPElement) totalBPElement.textContent = partBP;
         });
 
         // Calculate duration multiplier based on checkboxes
@@ -214,9 +228,14 @@
         if (noHarmChecked) durationMultiplier /= 2;
         if (endsOnceChecked) durationMultiplier /= 2;
 
+        // Calculate sustain reduction
+        const sustainValue = parseInt(document.getElementById('sustainValue').value, 10);
+        let sustainReduction = 1 - (0.25 + (sustainValue - 1) * 0.125);
+        if (sustainValue === 0) sustainReduction = 1;
+
         // Add additional options costs
         totalEnergy += (range * 0.5);
-        totalEnergy += (duration - 1) * durationMultiplier * totalEnergy;
+        totalEnergy += (duration - 1) * durationMultiplier * lingerEnergy * sustainReduction;
 
         document.getElementById("totalEnergy").textContent = totalEnergy.toFixed(2);
         document.getElementById("totalBP").textContent = totalBP;
