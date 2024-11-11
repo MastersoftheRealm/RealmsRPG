@@ -125,6 +125,30 @@
     <!-- Container for all power part sections -->
     <div id="powerPartsContainer"></div>
 
+    <!-- Power summary box -->
+    <div id="powerSummary">
+        <h3>Power Summary</h3>
+        <div class="power-summary-top">
+            <input type="text" id="powerName" placeholder="Power Name">
+            <p>Energy: <span id="summaryEnergy">0</span></p>
+            <p>Building Points: <span id="summaryBP">0</span></p>
+            <p>Range: <span id="summaryRange">1</span></p>
+            <p>Duration: <span id="summaryDuration">1</span></p>
+            <p>Action Type: <span id="summaryActionType">Basic Action</span></p>
+            <p id="summaryFocus" style="display: none;">Focus Required</p>
+            <p id="summarySustain" style="display: none;">Sustain (<span id="summarySustainValue">0</span>) Required</p>
+            <p id="summaryDamage" style="display: none;"></p>
+        </div>
+        <div class="power-summary-parts">
+            <h4>Power Parts:</h4>
+            <div id="summaryParts"></div>
+        </div>
+        <div class="power-summary-description">
+            <h4>Description:</h4>
+            <textarea id="powerDescription" placeholder="Power Description"></textarea>
+        </div>
+    </div>
+
     <!-- Display for total energy and BP cost -->
     <div id="totalCosts">
         <h3>Total Power Costs</h3>
