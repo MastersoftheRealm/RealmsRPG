@@ -18,8 +18,8 @@
             <div class="option-box range-box">
                 <h4>Range: <span id="rangeValue">1</span> space
                     <div class="button-container">
-                        <button class="small-button" onclick="changeRange(1)">+</button>
-                        <button class="small-button" onclick="changeRange(-1)">-</button>
+                        <button class="small-button blue-button" onclick="changeRange(1)">+</button>
+                        <button class="small-button blue-button" onclick="changeRange(-1)">-</button>
                     </div>
                 </h4>
                 <div class="area-effect-container">
@@ -40,16 +40,16 @@
                     <span id="areaEffectLevelValue">0</span>
                     <div id="areaEffectDescription"></div>
                     <div class="button-container">
-                        <button class="small-button" onclick="changeAreaEffectLevel(1)">+</button>
-                        <button class="small-button" onclick="changeAreaEffectLevel(-1)">-</button>
+                        <button class="small-button blue-button" onclick="changeAreaEffectLevel(1)">+</button>
+                        <button class="small-button blue-button" onclick="changeAreaEffectLevel(-1)">-</button>
                     </div>
                 </div>
             </div>
             <div class="option-box duration-box">
                 <h4>Duration: <span id="durationValue">1</span> round
                     <div class="button-container">
-                        <button class="small-button" onclick="changeDuration(1)">+</button>
-                        <button class="small-button" onclick="changeDuration(-1)">-</button>
+                        <button class="small-button blue-button" onclick="changeDuration(1)">+</button>
+                        <button class="small-button blue-button" onclick="changeDuration(-1)">-</button>
                     </div>
                 </h4>
                 <div class="checkbox-container">
@@ -83,6 +83,38 @@
                 </select>
                 <label><input type="checkbox" id="reactionCheckbox" onclick="updateActionType()"> Reaction</label>
                 <div id="actionTypeDescription"></div>
+            </div>
+            <div class="option-box damage-box">
+                <h4>Damage: 
+                    <input type="number" id="dieAmount1" min="1" max="99" value="" placeholder="Amount"> d 
+                    <select id="dieSize1">
+                        <option value="" selected disabled>Size</option>
+                        <option value="2">2</option>
+                        <option value="4">4</option>
+                        <option value="6">6</option>
+                        <option value="8">8</option>
+                        <option value="10">10</option>
+                        <option value="12">12</option>
+                    </select>
+                    <select id="damageType1" onchange="updateDamageType()">
+                        <option value="none" selected>No Damage</option>
+                        <option value="magic">Magic</option>
+                        <option value="fire">Fire</option>
+                        <option value="ice">Ice</option>
+                        <option value="lightning">Lightning</option>
+                        <option value="spiritual">Spiritual</option>
+                        <option value="sonic">Sonic</option>
+                        <option value="poison">Poison</option>
+                        <option value="necrotic">Necrotic</option>
+                        <option value="acid">Acid</option>
+                        <option value="psychic">Psychic</option>
+                        <option value="blunt">Blunt</option>
+                        <option value="piercing">Piercing</option>
+                        <option value="slashing">Slashing</option>
+                    </select>
+                    <button id="addDamageRowButton" class="medium-button blue-button" onclick="addDamageRow()">+</button>
+                </h4>
+                <div id="additionalDamageRow"></div>
             </div>
         </div>
     </div>
