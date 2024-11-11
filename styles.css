@@ -54,11 +54,25 @@ body {
 }
 
 #totalCosts {
-    margin-top: 20px;
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    width: 130px; /* Adjust width to be slightly smaller */
     padding: 10px;
-    background-color: white;
+    background-color: #e6f7ff; /* Very light blue */
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000; /* Ensure it stays on top */
+    font-size: 14px; /* Smaller font size */
+}
+
+#totalCosts h3 {
+    margin: 0 0 10px 0;
+    font-size: 16px;
+}
+
+#totalCosts p {
+    margin: 5px 0;
 }
 
 .power-part-section {
@@ -316,4 +330,77 @@ button:hover {
 
 .red-button:hover {
     background-color: #cc0000;
+}
+
+#powerSummary {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #e6f7ff; /* Very light blue */
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 80%;
+}
+
+#powerSummary h3 {
+    margin: 0 0 10px 0;
+    font-size: 24px;
+}
+
+.power-summary-top {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.power-summary-top p {
+    margin: 5px 0;
+    flex: 1 1 30%;
+}
+
+.power-summary-top input {
+    flex: 1 1 100%;
+    padding: 5px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+}
+
+.power-summary-parts {
+    margin-top: 10px;
+}
+
+.power-summary-parts h4 {
+    margin: 0 0 5px 0;
+}
+
+#summaryParts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+#summaryParts div {
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    padding: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    flex: 1 1 30%;
+}
+
+.power-summary-description {
+    margin-top: 10px;
+}
+
+.power-summary-description h4 {
+    margin: 0 0 5px 0;
+}
+
+#powerDescription {
+    width: 100%;
+    height: 100px;
+    padding: 5px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
 }
