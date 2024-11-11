@@ -1,4 +1,5 @@
 import powerPartsData from './powerPartsData.js';
+import damageTypeValues from './damageTypesData.js';
 
 (() => {
     const powerParts = powerPartsData;
@@ -59,8 +60,9 @@ import powerPartsData from './powerPartsData.js';
             <p>Part EN: <span id="totalEnergy-${partIndex}">${part.baseEnergy}</span> Part BP: <span id="totalBP-${partIndex}">${part.baseBP}</span></p>
             <p>${part.description}</p>
             
+            ${part.opt1Cost !== undefined || part.opt1Description ? `
             <div class="option-container">
-                ${part.opt1Cost !== 0 || part.opt1Description ? `
+                ${part.opt1Cost !== undefined || part.opt1Description ? `
                 <div class="option-box">
                     <h4>Energy: ${part.opt1Cost >= 0 ? '+' : ''}${part.opt1Cost}</h4>
                     <button onclick="changeOptionLevel(${partIndex}, 'opt1', 1)">+</button>
@@ -69,7 +71,7 @@ import powerPartsData from './powerPartsData.js';
                     <p>${part.opt1Description}</p>
                 </div>` : ''}
                 
-                ${part.opt2Cost !== 0 || part.opt2Description ? `
+                ${part.opt2Cost !== undefined || part.opt2Description ? `
                 <div class="option-box">
                     <h4>Energy: ${part.opt2Cost >= 0 ? '+' : ''}${part.opt2Cost}</h4>
                     <button onclick="changeOptionLevel(${partIndex}, 'opt2', 1)">+</button>
@@ -78,7 +80,7 @@ import powerPartsData from './powerPartsData.js';
                     <p>${part.opt2Description}</p>
                 </div>` : ''}
 
-                ${part.opt3Cost !== 0 || part.opt3Description ? `
+                ${part.opt3Cost !== undefined || part.opt3Description ? `
                 <div class="option-box">
                     <h4>Energy: ${part.opt3Cost >= 0 ? '+' : ''}${part.opt3Cost}</h4>
                     <button onclick="changeOptionLevel(${partIndex}, 'opt3', 1)">+</button>
@@ -86,13 +88,14 @@ import powerPartsData from './powerPartsData.js';
                     <span>Level: <span id="opt3Level-${partIndex}">0</span></span>
                     <p>${part.opt3Description}</p>
                 </div>` : ''}
-            </div>
+            </div>` : ''}
 
+            ${part.altBaseEnergy !== undefined || part.altBP !== undefined ? `
             <div class="option-box">
                 <h4>Alternate Base Energy: ${part.altBaseEnergy}</h4>
                 <button id="altEnergyButton-${partIndex}" class="alt-energy-button" onclick="toggleAltEnergy(${partIndex})">Toggle</button>
                 <p>${part.altEnergyDescription}</p>
-            </div>
+            </div>` : ''}
 
             <div class="linger-container">
                 <label><input type="checkbox" id="lingerCheckbox-${partIndex}" onclick="updateTotalCosts()"> Does not linger</label>
@@ -212,16 +215,44 @@ import powerPartsData from './powerPartsData.js';
         updateTotalCosts();
     }
 
+    function updateDamageType() {
+        updateTotalCosts();
+    }
+
+    function calculateDamageEnergyCost() {
+        let totalDamageEnergy = 0;
+
+        const dieAmount1 = parseInt(document.getElementById('dieAmount1').value, 10);
+        const dieSize1 = parseInt(document.getElementById('dieSize1').value, 10);
+        const damageType1 = document.getElementById('damageType1').value;
+
+        if (!isNaN(dieAmount1) && !isNaN(dieSize1) && damageType1 !== "none") {
+            const { dieBase: dieBase1, dieIncrease: dieIncrease1 } = damageTypeValues[damageType1];
+            totalDamageEnergy += (((dieAmount1 * dieSize1) / 2) - 1) * dieIncrease1 + dieBase1;
+        }
+
+        const dieAmount2 = parseInt(document.getElementById('dieAmount2')?.value, 10);
+        const dieSize2 = parseInt(document.getElementById('dieSize2')?.value, 10);
+        const damageType2 = document.getElementById('damageType2')?.value;
+
+        if (!isNaN(dieAmount2) && !isNaN(dieSize2) && damageType2 !== "none") {
+            const { dieBase: dieBase2, dieIncrease: dieIncrease2 } = damageTypeValues[damageType2];
+            totalDamageEnergy += (((dieAmount2 * dieSize2) / 2) - 1) * dieIncrease2 + dieBase2;
+        }
+
+        return totalDamageEnergy;
+    }
+
     function updateTotalCosts() {
-        let totalEnergy = 0;
+        let baseEnergy = 0;
         let totalBP = 0;
         let lingerEnergy = 0;
-    
+
         // Separate power parts by type
         const baseEnergyParts = [];
         const increaseParts = [];
         const decreaseParts = [];
-    
+
         selectedPowerParts.forEach((partData, partIndex) => {
             const part = partData.part;
             if (part.type === "base") {
@@ -232,52 +263,38 @@ import powerPartsData from './powerPartsData.js';
                 decreaseParts.push(partData);
             }
         });
-    
-        // Calculate base energy parts
+
+        // Round 1: Calculate base energy parts
         baseEnergyParts.forEach((partData, partIndex) => {
             const part = partData.part;
             let partEnergy = partData.useAltCost ? part.altBaseEnergy : part.baseEnergy;
             let partBP = part.baseBP;
-    
             partEnergy += part.opt1Cost * partData.opt1Level;
             partEnergy += part.opt2Cost * partData.opt2Level;
             partEnergy += part.opt3Cost * partData.opt3Level;
-    
-            partBP += part.BPIncreaseOpt1 * partData.opt1Level;
-            partBP += part.BPIncreaseOpt2 * partData.opt2Level;
-            partBP += part.BPIncreaseOpt3 * partData.opt3Level;
-    
-            totalEnergy += partEnergy;
+            baseEnergy += partEnergy;
             totalBP += partBP;
-    
-            // Exclude energy cost from duration increase if "Does not linger" is checked
-            const lingerCheckbox = document.getElementById(`lingerCheckbox-${partIndex}`);
-            if (lingerCheckbox && !lingerCheckbox.checked) {
-                lingerEnergy += partEnergy;
-            }
-    
-            const totalEnergyElement = document.getElementById(`totalEnergy-${partIndex}`);
-            const totalBPElement = document.getElementById(`totalBP-${partIndex}`);
-            if (totalEnergyElement) totalEnergyElement.textContent = partEnergy;
-            if (totalBPElement) totalBPElement.textContent = partBP;
         });
-    
+
         // Apply range cost before any increases or decreases
         const rangeCost = (range) * 0.5;
-        totalEnergy += rangeCost;
-    
-        // Calculate increase parts
+        baseEnergy += rangeCost;
+
+        // Calculate damage energy cost
+        baseEnergy += calculateDamageEnergyCost();
+
+        // Round 2: Apply increase parts
+        let increasedEnergy = baseEnergy;
         increaseParts.forEach((partData) => {
             const part = partData.part;
-            let partEnergy = totalEnergy * part.baseEnergy;
-    
-            partEnergy += totalEnergy * part.opt1Cost * partData.opt1Level;
-            partEnergy += totalEnergy * part.opt2Cost * partData.opt2Level;
-    
-            totalEnergy += partEnergy;
+            let partEnergy = increasedEnergy * part.baseEnergy;
+            partEnergy += increasedEnergy * part.opt1Cost * partData.opt1Level;
+            partEnergy += increasedEnergy * part.opt2Cost * partData.opt2Level;
+            partEnergy += increasedEnergy * part.opt3Cost * partData.opt3Level;
+            increasedEnergy += partEnergy;
         });
-    
-        // Calculate area effect cost
+
+        // Apply area effect cost
         const areaEffect = document.getElementById('areaEffect').value;
         const areaEffectCost = {
             none: 0,
@@ -292,9 +309,9 @@ import powerPartsData from './powerPartsData.js';
             expanding: 0.5,
             targetOnly: -0.25
         }[areaEffect];
-        totalEnergy += areaEffectLevel * areaEffectCost * totalEnergy;
-    
-        // Calculate action type cost (only increases)
+        increasedEnergy += areaEffectLevel * areaEffectCost * increasedEnergy;
+
+        // Apply action type cost (only increases)
         const actionType = document.getElementById('actionType').value;
         const reactionChecked = document.getElementById('reactionCheckbox').checked;
         const actionTypeCost = {
@@ -305,51 +322,96 @@ import powerPartsData from './powerPartsData.js';
             long4: -0.25
         }[actionType];
         if (actionTypeCost > 0) {
-            totalEnergy += actionTypeCost * totalEnergy;
+            increasedEnergy += actionTypeCost * increasedEnergy;
         }
         if (reactionChecked) {
-            totalEnergy += 0.25 * totalEnergy;
+            increasedEnergy += 0.25 * increasedEnergy;
         }
-    
-        // Calculate decrease parts
+
+        // Round 3: Apply decrease parts
+        let decreasedEnergy = increasedEnergy;
         decreaseParts.forEach((partData) => {
             const part = partData.part;
-            let partEnergy = totalEnergy * part.baseEnergy;
-    
-            partEnergy += totalEnergy * part.opt1Cost * partData.opt1Level;
-            partEnergy += totalEnergy * part.opt2Cost * partData.opt2Level;
-    
-            totalEnergy += partEnergy;
+            let partEnergy = decreasedEnergy * part.baseEnergy;
+            partEnergy += decreasedEnergy * part.opt1Cost * partData.opt1Level;
+            partEnergy += decreasedEnergy * part.opt2Cost * partData.opt2Level;
+            partEnergy += decreasedEnergy * part.opt3Cost * partData.opt3Level;
+            decreasedEnergy += partEnergy;
         });
-    
+
         // Apply action type cost (only decreases)
         if (actionTypeCost < 0) {
-            totalEnergy += actionTypeCost * totalEnergy;
+            decreasedEnergy += actionTypeCost * decreasedEnergy;
         }
-    
-        // Apply duration multiplier based on the altered total energy value
+
+        // Round 4: Apply duration multiplier based on the altered total energy value
         const focusChecked = document.getElementById('focusCheckbox').checked;
         const noHarmChecked = document.getElementById('noHarmCheckbox').checked;
         const endsOnceChecked = document.getElementById('endsOnceCheckbox').checked;
-    
+
         let durationMultiplier = 0.125;
         if (focusChecked) durationMultiplier /= 2;
         if (noHarmChecked) durationMultiplier /= 2;
         if (endsOnceChecked) durationMultiplier /= 2;
-    
+
         const sustainValue = parseInt(document.getElementById('sustainValue').value, 10);
         let sustainReduction = 1 - (0.25 + (sustainValue - 1) * 0.125);
         if (sustainValue === 0) sustainReduction = 1;
-    
-        totalEnergy += (duration - 1) * durationMultiplier * totalEnergy * sustainReduction;
-    
-        document.getElementById("totalEnergy").textContent = totalEnergy.toFixed(2);
+
+        const finalEnergy = decreasedEnergy + (duration - 1) * durationMultiplier * decreasedEnergy * sustainReduction;
+
+        document.getElementById("totalEnergy").textContent = finalEnergy.toFixed(2);
         document.getElementById("totalBP").textContent = totalBP;
     }
 
     document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("addPowerPartButton").addEventListener("click", addPowerPart);
+        document.getElementById('dieAmount1').addEventListener('input', updateTotalCosts);
+        document.getElementById('dieSize1').addEventListener('change', updateTotalCosts);
+        document.getElementById('damageType1').addEventListener('change', updateDamageType);
     });
+
+    function addDamageRow() {
+        const additionalDamageRow = document.getElementById('additionalDamageRow');
+        additionalDamageRow.innerHTML = `
+            <h4>Damage: 
+                <input type="number" id="dieAmount2" min="1" max="99" value="" placeholder="Amount"> d 
+                <select id="dieSize2">
+                    <option value="" selected disabled>Size</option>
+                    <option value="2">2</option>
+                    <option value="4">4</option>
+                    <option value="6">6</option>
+                    <option value="8">8</option>
+                    <option value="10">10</option>
+                    <option value="12">12</option>
+                </select>
+                <select id="damageType2" onchange="updateDamageType()">
+                    <option value="none" selected>No Damage</option>
+                    <option value="magic">Magic</option>
+                    <option value="fire">Fire</option>
+                    <option value="ice">Ice</option>
+                    <option value="lightning">Lightning</option>
+                    <option value="spiritual">Spiritual</option>
+                    <option value="sonic">Sonic</option>
+                    <option value="poison">Poison</option>
+                    <option value="necrotic">Necrotic</option>
+                    <option value="acid">Acid</option>
+                    <option value="psychic">Psychic</option>
+                    <option value="blunt">Blunt</option>
+                    <option value="piercing">Piercing</option>
+                    <option value="slashing">Slashing</option>
+                </select>
+                <button id="removeDamageRowButton" class="medium-button red-button" onclick="removeDamageRow()">-</button>
+            </h4>
+        `;
+        document.getElementById('addDamageRowButton').style.display = 'none';
+    }
+
+    function removeDamageRow() {
+        const additionalDamageRow = document.getElementById('additionalDamageRow');
+        additionalDamageRow.innerHTML = '';
+        document.getElementById('addDamageRowButton').style.display = 'inline-block';
+    }
 
     // Expose functions to global scope for inline event handlers
     window.updateSelectedPart = updateSelectedPart;
@@ -363,4 +425,7 @@ import powerPartsData from './powerPartsData.js';
     window.updateAreaEffect = updateAreaEffect;
     window.changeAreaEffectLevel = changeAreaEffectLevel;
     window.updateActionType = updateActionType;
+    window.updateDamageType = updateDamageType;
+    window.addDamageRow = addDamageRow;
+    window.removeDamageRow = removeDamageRow;
 })();
