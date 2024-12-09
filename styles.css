@@ -404,3 +404,32 @@ button:hover {
     border-radius: 5px;
     border: 1px solid #ccc;
 }
+
+.linger-container {
+    margin-top: 10px;
+}
+
+.linger-container label {
+    margin-right: 5px;
+}
+
+.top-right-container {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.switch-page-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: 14px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.switch-page-button:hover {
+    background-color: #0056b3;
+}

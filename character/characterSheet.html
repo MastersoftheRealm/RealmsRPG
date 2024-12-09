@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Character Sheet</title>
+    <link rel="stylesheet" href="characterSheet.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="mode-switch-container">
+        <label class="mode-switch">
+            <input type="checkbox" id="modeSwitch">
+            <span class="slider"></span>
+        </label>
+        <span id="modeLabel">Edit Mode</span>
+    </div>
+    <div class="top-right-container">
+        <a href="../index.html" class="switch-page-button">Power Creator</a>
+    </div>
+    <div class="character-sheet-container">
+        <div class="character-sheet">
+            <div class="header">
+                <input type="text" id="characterName" placeholder="Name">
+                <label for="level">Level</label>
+                <input type="number" id="level" min="1" max="20" value="1" placeholder="Level">
+                <button id="restButton">Rest</button>
+                <button id="settingsButton">Settings</button>
+            </div>
+
+            <div class="abilities-container">
+                <div class="ability-box">
+                    <label for="strength">Strength</label>
+                    <button id="strength-button" class="ability-button">+0</button>
+                    <select id="strength" class="ability hidden"></select>
+                    <input type="checkbox" id="strength-half" class="hidden">
+                    <label for="strength-half" class="half-point-label hidden">Half Point</label>
+                </div>
+                <div class="ability-box">
+                    <label for="vitality">Vitality</label>
+                    <button id="vitality-button" class="ability-button">+0</button>
+                    <select id="vitality" class="ability hidden"></select>
+                    <input type="checkbox" id="vitality-half" class="hidden">
+                    <label for="vitality-half" class="half-point-label hidden">Half Point</label>
+                </div>
+                <div class="ability-box">
+                    <label for="agility">Agility</label>
+                    <button id="agility-button" class="ability-button">+0</button>
+                    <select id="agility" class="ability hidden"></select>
+                    <input type="checkbox" id="agility-half" class="hidden">
+                    <label for="agility-half" class="half-point-label hidden">Half Point</label>
+                </div>
+                <div class="ability-box">
+                    <label for="acuity">Acuity</label>
+                    <button id="acuity-button" class="ability-button">+0</button>
+                    <select id="acuity" class="ability hidden"></select>
+                    <input type="checkbox" id="acuity-half" class="hidden">
+                    <label for="acuity-half" class="half-point-label hidden">Half Point</label>
+                </div>
+                <div class="ability-box">
+                    <label for="intelligence">Intelligence</label>
+                    <button id="intelligence-button" class="ability-button">+0</button>
+                    <select id="intelligence" class="ability hidden"></select>
+                    <input type="checkbox" id="intelligence-half" class="hidden">
+                    <label for="intelligence-half" class="half-point-label hidden">Half Point</label>
+                </div>
+                <div class="ability-box">
+                    <label for="charisma">Charisma</label>
+                    <button id="charisma-button" class="ability-button">+0</button>
+                    <select id="charisma" class="ability hidden"></select>
+                    <input type="checkbox" id="charisma-half" class="hidden">
+                    <label for="charisma-half" class="half-point-label hidden">Half Point</label>
+                </div>
+                <div class="ability-box">
+                    <label for="evasion">Evasion</label>
+                    <div id="evasion" class="evasion-value">10</div>
+                </div>
+                <div class="stat-box">
+                    <label for="terminal">Terminal</label>
+                    <div id="terminal" class="stat-values">
+                        <span id="terminal-value">X</span>
+                    </div>
+                </div>
+                <div class="stat-box">
+                    <label for="hit-points">Hit Points</label>
+                    <div id="hit-points" class="stat-values">
+                        <input type="number" id="current-hp" min="-999" value="X" class="current-value"> / <span id="max-hp">X</span>
+                    </div>
+                    <div class="stat-labels">
+                        <span>current</span> <span>max</span>
+                    </div>
+                    <div class="stat-buttons hp-buttons hidden">
+                        <button id="hp-increase">+</button>
+                        <button id="hp-decrease">-</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="defense-container">
+                <div class="defense-box">
+                    <label for="might-score">Might</label>
+                    <div id="might-score" class="defense-score">10</div>
+                    <div id="might-bonus" class="defense-bonus">0</div>
+                    <div class="defense-buttons-container hidden">
+                        <button id="might-increase" class="defense-button">+</button>
+                        <button id="might-decrease" class="defense-button">-</button>
+                    </div>
+                    <button id="might-roll" class="defense-roll-button hidden">+0</button>
+                </div>
+                <div class="defense-box">
+                    <label for="fortitude-score">Fortitude</label>
+                    <div id="fortitude-score" class="defense-score">10</div>
+                    <div id="fortitude-bonus" class="defense-bonus">0</div>
+                    <div class="defense-buttons-container hidden">
+                        <button id="fortitude-increase" class="defense-button">+</button>
+                        <button id="fortitude-decrease" class="defense-button">-</button>
+                    </div>
+                    <button id="fortitude-roll" class="defense-roll-button hidden">+0</button>
+                </div>
+                <div class="defense-box">
+                    <label for="reflex-score">Reflex</label>
+                    <div id="reflex-score" class="defense-score">10</div>
+                    <div id="reflex-bonus" class="defense-bonus">0</div>
+                    <div class="defense-buttons-container hidden">
+                        <button id="reflex-increase" class="defense-button">+</button>
+                        <button id="reflex-decrease" class="defense-button">-</button>
+                    </div>
+                    <button id="reflex-roll" class="defense-roll-button hidden">+0</button>
+                </div>
+                <div class="defense-box">
+                    <label for="discernment-score">Discernment</label>
+                    <div id="discernment-score" class="defense-score">10</div>
+                    <div id="discernment-bonus" class="defense-bonus">0</div>
+                    <div class="defense-buttons-container hidden">
+                        <button id="discernment-increase" class="defense-button">+</button>
+                        <button id="discernment-decrease" class="defense-button">-</button>
+                    </div>
+                    <button id="discernment-roll" class="defense-roll-button hidden">+0</button>
+                </div>
+                <div class="defense-box">
+                    <label for="mental-fortitude-score">Mental Fort.</label>
+                    <div id="mental-fortitude-score" class="defense-score">10</div>
+                    <div id="mental-fortitude-bonus" class="defense-bonus">0</div>
+                    <div class="defense-buttons-container hidden">
+                        <button id="mental-fortitude-increase" class="defense-button">+</button>
+                        <button id="mental-fortitude-decrease" class="defense-button">-</button>
+                    </div>
+                    <button id="mental-fortitude-roll" class="defense-roll-button hidden">+0</button>
+                </div>
+                <div class="defense-box">
+                    <label for="resolve-score">Resolve</label>
+                    <div id="resolve-score" class="defense-score">10</div>
+                    <div id="resolve-bonus" class="defense-bonus">0</div>
+                    <div class="defense-buttons-container hidden">
+                        <button id="resolve-increase" class="defense-button">+</button>
+                        <button id="resolve-decrease" class="defense-button">-</button>
+                    </div>
+                    <button id="resolve-roll" class="defense-roll-button hidden">+0</button>
+                </div>
+                <div class="ability-box">
+                    <label for="movement-speed">Movement</label>
+                    <div id="movement-speed" class="movement-speed-value">6</div>
+                    <span class="movement-speed-label">speed</span>
+                </div>
+                <div class="defense-box">
+                    <label for="inspiration">Inspiration</label>
+                    <input type="checkbox" id="inspiration" class="inspiration-checkbox">
+                </div>
+                <div class="stat-box">
+                    <label for="energy">Energy</label>
+                    <div id="energy" class="stat-values">
+                        <input type="number" id="current-energy" min="0" value="X" class="current-value"> / <span id="max-energy">X</span>
+                    </div>
+                    <div class="stat-labels">
+                        <span>current</span> <span>max</span>
+                    </div>
+                    <div class="stat-buttons energy-buttons hidden">
+                        <button id="energy-increase">+</button>
+                        <button id="energy-decrease">-</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="skills-and-extras-container">
+                <div class="skills-container">
+                    <h2 id="skills-title">Skills</h2>
+                    <div id="skills-list"></div>
+                    <select id="skillDropdown"></select>
+                    <button id="addSkillButton">Add Skill</button>
+                </div>
+                <div class="extra-boxes-container">
+                    <div class="extra-box" id="bonuses-box">
+                        <h3>Bonuses</h3>
+                        <!-- Content for bonuses -->
+                    </div>
+                    <div class="extra-box" id="weapons-box">
+                        <h3>Weapons</h3>
+                        <!-- Content for weapons -->
+                    </div>
+                    <div class="extra-box" id="armor-box">
+                        <h3>Armor</h3>
+                        <!-- Content for armor -->
+                    </div>
+                </div>
+                <div class="feats-box">
+                    <h3>Feats</h3>
+                    <!-- Content for feats -->
+                </div>
+            </div>
+
+            <div class="skill-points-container hidden">
+                <label for="skill-points-total">Skill Points</label>
+                <div id="skill-points-total" class="skill-points">0</div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="total-box hidden">
+        <label for="total">Energy/Hit Point Total</label>
+        <div id="total" class="total-value">0</div>
+    </div>
+
+    <div id="logContainer" class="log-container">
+        <div id="logHeader" class="log-header">
+            <span>Roll Log</span>
+            <button id="toggleLogButton">Toggle Log</button>
+        </div>
+        <div id="logContent" class="log-content"></div>
+    </div>
+
+    <script type="module" src="characterSheet.js"></script>
+</body>
+</html>

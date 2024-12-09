@@ -3,11 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Power Part Builder</title>
+    <title>Realms Power Builder</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-
+    <div class="top-right-container">
+        <a href="character/characterSheet.html" class="switch-page-button">Character Sheet</a>
+    </div>
     <!-- Page title -->
     <h1 class="page-title">Power Builder</h1>
 
@@ -42,6 +44,9 @@
                     <div class="button-container">
                         <button class="small-button blue-button" onclick="changeAreaEffectLevel(1)">+</button>
                         <button class="small-button blue-button" onclick="changeAreaEffectLevel(-1)">-</button>
+                    </div>
+                    <div class="linger-container">
+                        <label><input type="checkbox" id="areaLingerCheckbox" onclick="updateTotalCosts()"> Does Linger</label>
                     </div>
                 </div>
             </div>
